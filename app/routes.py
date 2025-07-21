@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, Blueprint
+from flask import render_template, redirect, url_for, flash, request, Blueprint, session
 from flask_login import login_user, current_user, login_required, logout_user
 from werkzeug.security import check_password_hash
 from app import db
@@ -131,6 +131,7 @@ def login():
         # Aquí debes comparar la contraseña correctamente, dependiendo de cómo la guardes
         if usuario and usuario.password == contraseña:
             login_user(usuario)
+            session['show_intro'] = True
             flash('¡Has iniciado sesión exitosamente!', 'success')
             return redirect(url_for('main.dashboard'))
         else:
