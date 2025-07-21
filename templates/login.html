@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar Sesión</title>
+<style>
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 20px;
+}
+.subtle-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(64, 64, 64, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(96, 96, 96, 0.08) 0%, transparent 50%);
+  animation: patternMove 30s linear infinite;
+}
+@keyframes patternMove {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -20px) rotate(90deg); }
+  50% { transform: translate(-20px, 20px) rotate(180deg); }
+  75% { transform: translate(-20px, -20px) rotate(270deg); }
+}
+.register-container {
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 4rem 4rem;
+  border-radius: 16px;
+  width: 400px;
+  max-width: 95vw;
+  position: relative;
+  animation: containerFadeIn 0.8s ease-out;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 10;
+  border: 1px solid rgba(64, 64, 64, 0.3);
+}
+@keyframes containerFadeIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #666 15%, #999 50%, #666 85%, transparent 100%);
+  border-radius: 16px 16px 0 0;
+}
+h2 {
+  text-align: center;
+  margin-bottom: 3.5rem;
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+}
+.form-group {
+  margin-bottom: 3.5rem;
+  position: relative;
+  z-index: 2;
+}
+label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+label::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #888;
+  transition: width 0.3s ease;
+}
+.form-group:focus-within label::after {
+  width: 100%;
+}
+.input-wrapper {
+  position: relative;
+  border-radius: 8px;
+}
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  font-weight: 400;
+}
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  outline: none;
+  border-color: #666;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+.show-password {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  z-index: 2;
+  position: relative;
+}
+.show-password:hover {
+  color: #ccc;
+}
+.show-password input {
+  margin-right: 0.8rem;
+  cursor: pointer;
+  accent-color: #888;
+}
+.show-password label {
+  margin: 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+.btn-wrapper {
+  position: relative;
+  margin: 3.5rem 0 2.5rem 0;
+  border-radius: 8px;
+}
+button {
+  width: 100%;
+  padding: 1.3rem;
+  background: linear-gradient(135deg, #333 0%, #555 50%, #333 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+button:hover {
+  background: linear-gradient(135deg, #444 0%, #666 50%, #444 100%);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+button:active {
+  transform: translateY(0);
+}
+.login-link {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  position: relative;
+  font-size: 0.95rem;
+}
+.login-link a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.login-link a::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #999;
+  transition: width 0.3s ease;
+}
+.login-link a:hover {
+  color: #fff;
+}
+.login-link a:hover::before {
+  width: 100%;
+}
+.flash {
+  margin-bottom: 2rem;
+  padding: 1.2rem 1.5rem;
+  border-radius: 8px;
+  background: rgba(220, 53, 69, 0.9);
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+  animation: flashFadeIn 0.6s ease-in-out;
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  z-index: 2;
+  position: relative;
+  font-size: 0.95rem;
+}
+@keyframes flashFadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 700px) {
+  .register-container {
+    width: 98%;
+    padding: 1.5rem 0.7rem;
+    margin: 0.5rem;
+  }
+  h2 {
+    font-size: 1.3rem;
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    font-size: 0.95rem;
+    padding: 0.9rem 0.8rem;
+  }
+  button {
+    font-size: 0.98rem;
+    padding: 1rem;
+  }
+}
+@media (max-width: 400px) {
+  h2 {
+    font-size: 1.1rem;
+  }
+  .register-container {
+    padding: 1rem 0.3rem;
+  }
+}
+</style>
+</head>
+<body>
+<div class="subtle-pattern"></div>
+<div class="register-container">
+  <h2>Iniciar Sesión</h2>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <form method="POST">
+    <div class="form-group">
+      <label for="correo">Correo electrónico</label>
+      <div class="input-wrapper"><input type="email" id="correo" name="correo" placeholder="tu@email.com" required></div>
+    </div>
+    <div class="form-group">
+      <label for="contraseña">Contraseña</label>
+      <div class="input-wrapper"><input type="password" id="contraseña" name="contraseña" placeholder="••••••••" required></div>
+      <div class="show-password"><input type="checkbox" id="togglePassword"><label for="togglePassword">Mostrar contraseña</label></div>
+    </div>
+    <div class="btn-wrapper"><button type="submit">Iniciar Sesión</button></div>
+  </form>
+  <div class="login-link">¿No tienes cuenta? <a href="{{ url_for('main.register') }}">Regístrate</a></div>
+</div>
+<script>
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('contraseña');
+togglePassword.addEventListener('change', function() {
+    passwordInput.type = this.checked ? 'text' : 'password';
+});
+const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+inputs.forEach(input => {
+    input.addEventListener('blur', function() {
+        if (this.value.length > 0) {
+            this.style.borderColor = '#666';
+            this.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.1)';
+        }
+    });
+});
+</script>
+</body>
+</html>

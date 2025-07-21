@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Métricas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        /* Alto contraste */
+        body.high-contrast, .high-contrast .dashboard-container, .high-contrast .stat-card, .high-contrast .chart-container, .high-contrast .table-container, .high-contrast .filters-section {
+            background: #000 !important;
+            color: #fff !important;
+        }
+        .high-contrast .stat-card, .high-contrast .chart-container, .high-contrast .table-container, .high-contrast .filters-section {
+            border: 2px solid #fff !important;
+        }
+        .high-contrast th, .high-contrast td {
+            background: #000 !important;
+            color: #fff !important;
+        }
+        .high-contrast .btn-primary, .high-contrast .btn-filter {
+            background: #fff !important;
+            color: #000 !important;
+            border: 2px solid #fff !important;
+        }
+        .high-contrast .btn-primary:hover, .high-contrast .btn-filter:hover {
+            background: #ffd700 !important;
+            color: #000 !important;
+        }
+        /* Foco visible */
+        :focus {
+            outline: 3px solid #ffd700 !important;
+            outline-offset: 2px;
+        }
+        /* Botones de tamaño de fuente */
+        html.font-large {
+            font-size: 120%;
+        }
+        html.font-xlarge {
+            font-size: 140%;
+        }
+        html.font-small {
+            font-size: 90%;
+        }
+        html.font-xsmall {
+            font-size: 80%;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .actions-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: nowrap;
+            gap: 2rem;
+            overflow-x: auto;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-logout:hover {
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .flash {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .filters-section {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .filters-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-input {
+            padding: 0.75rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 150px;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn-filter {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-filter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-clear {
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(52, 152, 219, 0.02);
+        }
+
+        tr:hover {
+            background: rgba(52, 152, 219, 0.05);
+            transform: scale(1.001);
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #metricasChart {
+            flex: 1;
+            min-height: 250px;
+            max-height: 300px;
+            width: 100% !important;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #bdc3c7;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card h3 {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            .stats-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 800px) {
+            .dashboard-container {
+                padding: 0.3rem;
+                margin: 0.1rem;
+                border-radius: 10px;
+            }
+            .main-title {
+                font-size: 1.2rem;
+            }
+            .actions-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.7rem;
+            }
+            .btn-primary, .actions-bar label.btn-primary {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.98rem;
+                padding: 0.7rem 0.5rem;
+            }
+            .filters-form {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.3rem;
+            }
+            .filter-group {
+                justify-content: flex-start;
+            }
+            .table-container {
+                overflow-x: auto;
+            }
+            table {
+                min-width: 520px;
+                font-size: 0.91rem;
+            }
+            th, td {
+                padding: 0.25rem 0.2rem;
+                word-break: break-word;
+            }
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            .stat-card {
+                padding: 0.7rem;
+            }
+            .chart-container {
+                height: auto;
+                padding: 0.3rem;
+            }
+            #metricasChart {
+                min-height: 120px;
+            }
+            .header > div {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .filters-section {
+                padding: 0.7rem;
+            }
+            /* Estadísticas responsive */
+            .chart-title {
+                font-size: 1.1rem;
+            }
+            .table-container table {
+                font-size: 0.91rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 0.1rem;
+            }
+            .main-title {
+                font-size: 0.95rem;
+            }
+            .stat-card .stat-value {
+                font-size: 1rem;
+            }
+            .btn-primary, .actions-bar label.btn-primary {
+                font-size: 0.93rem;
+                padding: 0.4rem 0.4rem;
+            }
+            th, td {
+                font-size: 0.8rem;
+                padding: 0.13rem 0.1rem;
+            }
+            .filters-section {
+                padding: 0.3rem;
+            }
+            .table-container table {
+                font-size: 0.8rem;
+            }
+            .table-container td form input,
+            .table-container td form button {
+                font-size: 0.8rem !important;
+                padding: 0.2rem 0.2rem !important;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    {% set comparativa_json = comparativa_json if comparativa_json is defined else None %}
+    <!-- Modal de bienvenida y guía rápida -->
+    <div id="welcomeModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(30,44,80,0.85);backdrop-filter:blur(2px);justify-content:center;align-items:center;">
+        <div style="background:#fff;color:#232526;max-width:400px;width:90vw;padding:2rem 1.5rem 1.5rem 1.5rem;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);position:relative;text-align:center;">
+            <h2 style="margin-bottom:1rem;font-size:1.5rem;">¡Bienvenido a tu Panel de Seguimiento Personal!</h2>
+            <div id="guideSteps">
+                <div class="guide-step">
+                    <b>¿Qué es este panel?</b><br>
+                    Aquí puedes llevar un registro de tus métricas personales (como peso, sueño, hábitos, etc.) y ver tu progreso de manera visual y sencilla. ¡No necesitas saber de tecnología!
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>1. Agregar una métrica</b><br>
+                    Haz clic en <span style="color:#3498db;font-weight:bold;">➕ Agregar Métrica</span> para registrar un nuevo dato, como tu peso de hoy, cuántos vasos de agua tomaste, horas de sueño, etc.<br>
+                    <ul style='text-align:left;margin:0.5em 0 0 1em;'>
+                        <li>Elige el tipo de métrica (ejemplo: Peso, Agua, Sueño...)</li>
+                        <li>Escribe el valor (ejemplo: 70, 8, 2000...)</li>
+                        <li>Puedes añadir una nota o categoría si lo deseas</li>
+                        <li>Guarda y verás tu dato en la tabla</li>
+                    </ul>
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>2. Consultar tus datos</b><br>
+                    En la tabla puedes ver todas tus métricas registradas. Usa el buscador o los filtros de fecha para encontrar datos específicos.<br>
+                    <ul style='text-align:left;margin:0.5em 0 0 1em;'>
+                        <li>Puedes editar o eliminar cualquier dato usando los botones de la derecha</li>
+                    </ul>
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>3. Ver tu progreso</b><br>
+                    La gráfica muestra cómo han cambiado tus métricas a lo largo del tiempo. Así puedes ver si mejoras o necesitas ajustar tus hábitos.<br>
+                    <ul style='text-align:left;margin:0.5em 0 0 1em;'>
+                        <li>Las tarjetas de arriba muestran totales y promedios</li>
+                        <li>Las alertas y tendencias te avisan si vas bien o si debes prestar atención</li>
+                    </ul>
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>4. Gestionar categorías</b><br>
+                    Organiza tus métricas en categorías personalizadas desde <span style="color:#3498db;font-weight:bold;">🗂️ Gestionar Categorías</span>. Así puedes separar, por ejemplo, salud, ejercicio, alimentación, etc.
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>5. Exportar e importar datos</b><br>
+                    Puedes descargar tus métricas en Excel o CSV para guardarlas o analizarlas fuera de la app. También puedes importar datos si ya tienes un archivo.<br>
+                    <ul style='text-align:left;margin:0.5em 0 0 1em;'>
+                        <li>Usa los botones de Exportar/Importar en la barra de acciones</li>
+                    </ul>
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>6. Personaliza tu experiencia</b><br>
+                    Cambia el color principal, el modo claro/oscuro y el tamaño de letra desde la parte superior derecha para que la app sea cómoda para ti.
+                </div>
+                <div class="guide-step" style="display:none;">
+                    <b>¿Dudas?</b><br>
+                    Si tienes preguntas, revisa esta guía de nuevo haciendo clic en <b>¿Cómo funciona?</b> o consulta con quien te compartió la app.
+                </div>
+            </div>
+            <div style="margin-top:1.5rem;">
+                <button id="prevStep" class="btn-primary" style="display:none;">Anterior</button>
+                <button id="nextStep" class="btn-primary">Siguiente</button>
+                <button id="closeWelcome" class="btn-primary" style="display:none;">¡Listo!</button>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-container" role="main" aria-label="Panel principal de métricas">
+        <div class="header">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <p class="welcome-text">Bienvenido(a), <strong>{{ current_user.username }}</strong></p>
+                    <h1 class="main-title">Tablero de Bienestar</h1>
+                    <p class="subtitle">Gestiona y visualiza tus métricas de forma eficiente</p>
+                </div>
+                <div style="text-align:right;">
+                    <button id="toggleDark" class="btn-primary" style="margin-bottom:0.5rem;" title="Cambia entre modo claro y oscuro">🌙/☀️</button>
+                    <button id="toggleContrast" class="btn-primary" style="margin-bottom:0.5rem;" title="Alto contraste">🌓 Contraste</button>
+                    <form action="{{ url_for('main.logout') }}" method="get" style="display:inline; margin-left:0.5rem;">
+                        <button type="submit" class="btn-primary btn-logout" style="margin-bottom:0.5rem;">🚪 Cerrar Sesión</button>
+                    </form>
+                    <br>
+                    <label style="font-size:0.9rem;">Color principal:
+                        <input type="color" id="themeColor" value="#3498db" style="width:32px;height:32px;border:none;vertical-align:middle;" title="Personaliza el color principal">
+                    </label>
+                    <br>
+                    <button id="increaseFont" class="btn-primary" style="font-size:0.95rem;">A+</button>
+                    <button id="decreaseFont" class="btn-primary" style="font-size:0.95rem;">A-</button>
+                    <button id="showGuide" class="btn-primary" style="margin-top:0.5rem;font-size:0.95rem;" title="Ver guía rápida de uso">¿Cómo funciona?</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h3>Total Métricas</h3>
+                <div class="stat-value" id="totalMetrics">{{ metricas|length }}</div>
+            </div>
+            <div class="stat-card">
+            <h3>Métricas Hoy</h3>
+            <div class="stat-value" id="todayMetrics">{{ metricas_hoy }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Categorías</h3>
+                <div class="stat-value" id="totalCategories">{{ total_categorias }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Última Actualización</h3>
+                <div class="stat-value" id="lastUpdate" style="font-size: 1rem;">Hoy</div>
+            </div>
+        </div>
+        <!-- Calendario de métricas -->
+        <div style="margin-bottom:2rem;">
+            <h2 class="chart-title">📅 Calendario de Métricas</h2>
+            <div id="calendarContainer" style="max-width:400px;margin:0 auto;"></div>
+        </div>
+        <script id="fechasMetricasData" type="application/json">
+            {{ fechas_metricas_json|safe }}
+        </script>
+
+        <div class="actions-bar">
+            <a href="{{ url_for('main.agregar_metrica') }}" class="btn-primary">
+                ➕ Agregar Métrica
+            </a>
+            <a href="{{ url_for('main.categories') }}" class="btn-primary">
+                🗂️ Gestionar Categorías
+            </a>
+            <a href="{{ url_for('main.exportar_metricas', formato='csv') }}" class="btn-primary" title="Exportar métricas a CSV">⬇️ Exportar CSV</a>
+            <a href="{{ url_for('main.exportar_metricas', formato='excel') }}" class="btn-primary" title="Exportar métricas a Excel">⬇️ Exportar Excel</a>
+            <form action="{{ url_for('main.importar_metricas') }}" method="post" enctype="multipart/form-data" style="display:inline;">
+                <label class="btn-primary" style="margin-bottom:0;cursor:pointer;">
+                    ⬆️ Importar
+                    <input type="file" name="archivo" accept=".csv,.xlsx" style="display:none;" onchange="this.form.submit()">
+                </label>
+            </form>
+                    </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash">✅ {{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {# Tendencias #}
+        {% if tendencias %}
+          {% for tipo, mensaje in tendencias.items() %}
+            {% if mensaje %}
+              <div style="margin-bottom:1rem;padding:1rem;border-radius:12px;background:linear-gradient(135deg,#2980b9,#6dd5fa);color:white;font-weight:500;box-shadow:0 4px 15px rgba(52,152,219,0.18);text-align:center;">
+                📈 {{ mensaje }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {# Alertas #}
+        {% if alertas %}
+          {% for tipo, alerta in alertas.items() %}
+            {% if alerta %}
+              <div style="margin-bottom:1rem;padding:1rem;border-radius:12px;background:linear-gradient(135deg,#e74c3c,#f39c12);color:white;font-weight:600;box-shadow:0 4px 15px rgba(231,76,60,0.18);text-align:center;">
+                ⚠️ {{ alerta }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <div class="filters-section">
+            <form method="get" class="filters-form">
+                <div class="filter-group">
+                    <input type="text" name="q" id="searchInput" class="filter-input" 
+                           placeholder="🔍 Buscar por tipo..." value="{{ request.args.get('q', '') }}">
+                </div>
+                <div class="filter-group">
+                    <label>Desde:</label>
+                    <input type="date" name="fecha_inicio" class="filter-input" 
+                           value="{{ request.args.get('fecha_inicio', '') }}">
+                </div>
+                <div class="filter-group">
+                    <label>Hasta:</label>
+                    <input type="date" name="fecha_fin" class="filter-input" 
+                           value="{{ request.args.get('fecha_fin', '') }}">
+                </div>
+                <button type="submit" class="btn-filter">🔍 Filtrar</button>
+                <a href="{{ url_for('main.dashboard') }}" class="btn-clear">🗑️ Limpiar</a>
+            </form>
+        </div>
+
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Cargando métricas...</p>
+        </div>
+
+                <div class="table-container">
+            <table id="metricasTable">
+                <thead>
+                    <tr>
+                        <th>📊 Tipo</th>
+                        <th>🔢 Valor</th>
+                        <th>📏 Unidad</th>
+                        <th>🏷️ Categoría</th>
+                        <th>📝 Nota</th>
+                        <th>📅 Fecha</th>
+                        <th>⚙️ Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for metrica in metricas %}
+                    <tr>
+                        <td><strong>{{ metrica.nombre }}</strong></td>
+                        <td>{{ metrica.valor }}</td>
+                        <td>{{ metrica.unidad or '-' }}</td>
+                        <td>{{ metrica.categoria.nombre if metrica.categoria else '-' }}</td>
+                        <td>{{ metrica.nota or '-' }}</td>
+                        <td>
+                          {% if metrica.fecha %}
+                            {{ metrica.fecha.strftime('%d/%m/%Y') }}
+                          {% else %}
+                            Sin fecha
+                          {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('main.editar_metrica', id=metrica.id) }}" class="btn-edit">
+                                ✏️ Editar
+                            </a>
+                            <form action="{{ url_for('main.eliminar_metrica', id=metrica.id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-delete" 
+                                        onclick="return confirm('¿Seguro que deseas eliminar esta métrica?');">
+                                    🗑️ Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <h3>No hay métricas registradas</h3>
+                            <p>Comienza agregando tu primera métrica</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        
+        <div class="chart-container">
+            <h2 class="chart-title">📈 Evolución de Métricas</h2>
+            <canvas id="metricasChart"></canvas>
+        </div>
+
+        <!-- Estadísticas por tipo de métrica -->
+        <div style="margin-top:2rem;">
+            <h2 class="chart-title">📊 Estadísticas por Tipo de Métrica</h2>
+            <table style="width:100%;background:white;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.07);margin-bottom:2rem;">
+                <thead>
+                    <tr style="background:linear-gradient(135deg,#34495e,#2c3e50);color:white;">
+                        <th style="padding:0.7rem;">Tipo</th>
+                        <th style="padding:0.7rem;">Promedio</th>
+                        <th style="padding:0.7rem;">Máximo</th>
+                        <th style="padding:0.7rem;">Mínimo</th>
+                        <th style="padding:0.7rem;">Unidad</th>
+                        <th style="padding:0.7rem;">Objetivo</th>
+                        <th style="padding:0.7rem;">Progreso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tipo, data in stats.items() %}
+                    <tr>
+                        <td style="padding:0.7rem;font-weight:bold;">{{ tipo }}</td>
+                        <td style="padding:0.7rem;">{{ data.promedio }}</td>
+                        <td style="padding:0.7rem;">{{ data.maximo }}</td>
+                        <td style="padding:0.7rem;">{{ data.minimo }}</td>
+                        <td style="padding:0.7rem;">{{ data.unidad }}</td>
+                        <td style="padding:0.7rem;">
+                            <form method="post" style="display:flex;gap:0.3rem;align-items:center;">
+                                <input type="hidden" name="objetivo_metrica" value="{{ tipo }}">
+                                <input type="number" step="any" name="valor_objetivo" value="{{ objetivos[tipo].valor_objetivo if objetivos[tipo] else '' }}" placeholder="Meta" style="width:70px;padding:0.3rem 0.4rem;border-radius:6px;border:1px solid #ccc;">
+                                <input type="text" name="unidad_objetivo" value="{{ objetivos[tipo].unidad if objetivos[tipo] else data.unidad }}" placeholder="Unidad" style="width:50px;padding:0.3rem 0.4rem;border-radius:6px;border:1px solid #ccc;">
+                                <button type="submit" class="btn-primary" style="padding:0.3rem 0.7rem;font-size:0.9rem;">Guardar</button>
+                            </form>
+                        </td>
+                        <td style="padding:0.7rem;min-width:120px;">
+                            {% set objetivo = objetivos[tipo].valor_objetivo if objetivos[tipo] else None %}
+                            {% if objetivo and objetivo|float > 0 %}
+                            {% set progreso = (data.promedio / objetivo * 100) if objetivo|float != 0 else 0 %}
+                            {% set progreso = progreso if progreso >= 0 else 0 %}
+                        <div style="background:#eee;border-radius:8px;overflow:hidden;height:18px;width:100%;">
+                            <div style="background:linear-gradient(90deg,#2ecc71,#27ae60);height:100%;width:'{{ progreso if progreso < 100 else 100 }}%';transition:width 0.5s;"></div>
+                        </div>
+                            {% if progreso >= 100 %}
+                        <span style="font-size:0.95em;color:#27ae60;font-weight:bold;">¡Meta alcanzada!</span>
+                            {% else %}
+                        <span style="font-size:0.95em;">{{ progreso|round(1) }}% de la meta<br><span style="color:#888;">Faltan {{ (objetivo - data.promedio)|round(2) }} {{ data.unidad }}</span></span>
+                            {% endif %}
+                            {% else %}
+                        <span style="color:#aaa;font-size:0.95em;">Sin objetivo</span>
+                        {% endif %}
+                    </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" style="text-align:center;color:#7f8c8d;padding:1.5rem;">No hay datos para mostrar estadísticas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script id="metricasData" type="application/json">
+        {{ metricas_json|safe }}
+    </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script>
+    // Calendario simple de métricas
+    function renderCalendar(fechas) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        const diasMes = new Date(year, month + 1, 0).getDate();
+        const primerDia = new Date(year, month, 1).getDay();
+        let html = '<table style="width:100%;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.07);font-size:1rem;">';
+        html += '<thead><tr style="background:linear-gradient(135deg,#34495e,#2c3e50);color:white;">';
+        const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+        for (let d of dias) html += `<th style="padding:0.4rem;">${d}</th>`;
+        html += '</tr></thead><tbody><tr>';
+        let diaSemana = primerDia;
+        if (diaSemana === 0) diaSemana = 7;
+        for (let i = 1; i < diaSemana; i++) html += '<td></td>';
+        for (let dia = 1; dia <= diasMes; dia++) {
+            const fechaStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+            const tieneMetrica = fechas.includes(fechaStr);
+            html += `<td style="padding:0.4rem;text-align:center;${tieneMetrica?'background:linear-gradient(135deg,#2ecc71,#27ae60);color:white;font-weight:bold;border-radius:6px;':''}">${dia}</td>`;
+            if ((dia + diaSemana - 1) % 7 === 0) html += '</tr><tr>';
+        }
+        html += '</tr></tbody></table>';
+        document.getElementById('calendarContainer').innerHTML = html;
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechasMetricas = JSON.parse(document.getElementById('fechasMetricasData').textContent || '[]');
+        renderCalendar(fechasMetricas);
+    });
+    </script>
+    <script>
+        // Accesibilidad: Alto contraste
+        document.getElementById('toggleContrast').addEventListener('click', function() {
+            document.body.classList.toggle('high-contrast');
+        });
+        // Accesibilidad: Tamaño de fuente
+        let fontSizeState = 0; // 0=normal, 1=large, 2=xlarge, -1=small, -2=xsmall
+        document.getElementById('increaseFont').addEventListener('click', function() {
+            if (fontSizeState < 2) fontSizeState++;
+            updateFontSize();
+        });
+        document.getElementById('decreaseFont').addEventListener('click', function() {
+            if (fontSizeState > -2) fontSizeState--;
+            updateFontSize();
+        });
+        function updateFontSize() {
+            document.documentElement.classList.remove('font-xsmall', 'font-small', 'font-large', 'font-xlarge');
+            if (fontSizeState === 1) document.documentElement.classList.add('font-large');
+            else if (fontSizeState === 2) document.documentElement.classList.add('font-xlarge');
+            else if (fontSizeState === -1) document.documentElement.classList.add('font-small');
+            else if (fontSizeState === -2) document.documentElement.classList.add('font-xsmall');
+        }
+    </script>
+    <script>
+        // Búsqueda mejorada en tiempo real
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('metricasTable');
+        const tbody = table.querySelector('tbody');
+        
+        searchInput.addEventListener('input', function() {
+            const filter = this.value.toLowerCase().trim();
+            const rows = tbody.getElementsByTagName('tr');
+            let visibleCount = 0;
+            
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let showRow = false;
+                
+                if (cells.length > 0) {
+                    for (let j = 0; j < cells.length - 1; j++) { // Excluir columna de acciones
+                        if (cells[j].textContent.toLowerCase().includes(filter)) {
+                            showRow = true;
+                            break;
+                        }
+                    }
+                    
+                    rows[i].style.display = showRow ? '' : 'none';
+                    if (showRow) visibleCount++;
+                }
+            }
+            
+            // Mostrar mensaje si no hay resultados
+            if (visibleCount === 0 && filter) {
+                if (!document.querySelector('.no-results')) {
+                    const noResultsRow = document.createElement('tr');
+                    noResultsRow.className = 'no-results';
+                    noResultsRow.innerHTML = '<td colspan="7" class="empty-state">🔍 No se encontraron métricas que coincidan con tu búsqueda</td>';
+                    tbody.appendChild(noResultsRow);
+                }
+            } else {
+                const noResultsRow = document.querySelector('.no-results');
+                if (noResultsRow) noResultsRow.remove();
+            }
+        });
+
+        // Datos para la gráfica mejorada
+        const metricasData = JSON.parse(document.getElementById('metricasData').textContent) || [];
+        const filteredMetricasData = metricasData.filter(m => m.fecha && m.valor !== null);
+        
+        // Actualizar estadísticas
+        const today = new Date().toISOString().split('T')[0];
+        const todayMetrics = filteredMetricasData.filter(m => m.fecha.startsWith(today)).length;
+        const categories = [...new Set(filteredMetricasData.map(m => m.categoria).filter(c => c))];
+        
+        // document.getElementById('todayMetrics').textContent = todayMetrics;
+
+        // Configuración de colores profesionales
+        const colors = [
+            '#3498db', '#e74c3c', '#2ecc71', '#f39c12', 
+            '#34495e', '#16a085', '#27ae60', '#2980b9',
+            '#8e44ad', '#d35400', '#c0392b', '#7f8c8d'
+        ];
+
+        // Generar gráfica si hay datos
+        if (filteredMetricasData.length > 0) {
+            const tipos = [...new Set(filteredMetricasData.map(m => m.nombre))];
+            const datasets = tipos.map((tipo, index) => {
+                const datosTipo = filteredMetricasData
+                    .filter(m => m.nombre === tipo)
+                    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+                // Gradiente para el fondo bajo la línea
+                const ctx = document.getElementById('metricasChart').getContext('2d');
+                let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, colors[index % colors.length] + 'BB');
+                gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                return {
+                    label: tipo,
+                    data: datosTipo.map(m => ({x: m.fecha, y: parseFloat(m.valor)})),
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.5,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: colors[index % colors.length],
+                    pointBorderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    borderWidth: 3,
+                    shadowOffsetX: 2,
+                    shadowOffsetY: 2,
+                    shadowBlur: 8,
+                    shadowColor: colors[index % colors.length]
+                };
+            });
+
+            const ctx = document.getElementById('metricasChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: { datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 16,
+                                font: { size: 13, weight: 'bold' },
+                                color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526'
+                            }
+                        },
+                        title: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(30,44,80,0.95)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3498db',
+                            borderWidth: 2,
+                            cornerRadius: 10,
+                            displayColors: true,
+                            padding: 14,
+                            caretSize: 8,
+                            boxPadding: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: { 
+                                unit: 'day', 
+                                tooltipFormat: 'dd/MM/yyyy',
+                                displayFormats: { day: 'dd/MM' }
+                            },
+                            title: { 
+                                display: true, 
+                                text: 'Fecha',
+                                font: { size: 14, weight: 'bold' },
+                                color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526'
+                            },
+                            grid: { color: 'rgba(52,152,219,0.08)' },
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526', font: { size: 12 } }
+                        },
+                        y: {
+                            title: { 
+                                display: true, 
+                                text: 'Valor',
+                                font: { size: 14, weight: 'bold' },
+                                color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526'
+                            },
+                            grid: { color: 'rgba(52,152,219,0.08)' },
+                            beginAtZero: false,
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526', font: { size: 12 } }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            hoverBorderWidth: 3
+                        },
+                        line: {
+                            borderWidth: 3
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        } else {
+            document.querySelector('.chart-container').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📈</div>
+                    <h3>No hay datos para mostrar en la gráfica</h3>
+                    <p>Agrega algunas métricas para ver su evolución</p>
+                </div>
+            `;
+        }
+
+        // Efectos de animación suaves
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+
+        // Confirmación mejorada para eliminar
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (confirm('⚠️ ¿Estás seguro de que deseas eliminar esta métrica?\n\nEsta acción no se puede deshacer.')) {
+                    this.closest('form').submit();
+                }
+            });
+        });
+    </script>
+    <script>
+    // Modo oscuro y color personalizado
+    const root = document.documentElement;
+    const toggleDark = document.getElementById('toggleDark');
+    const themeColor = document.getElementById('themeColor');
+
+    // Cargar preferencias
+    function applyTheme() {
+        const dark = localStorage.getItem('darkMode') === 'true';
+        const color = localStorage.getItem('themeColor') || '#3498db';
+        themeColor.value = color;
+        if (dark) {
+            document.body.style.background = 'linear-gradient(135deg, #232526 0%, #414345 100%)';
+            root.style.setProperty('--main-bg', '#232526');
+            root.style.setProperty('--main-fg', '#fff');
+            root.style.setProperty('--card-bg', '#2c3e50');
+            root.style.setProperty('--text-color', '#fff');
+            root.style.setProperty('--primary', color);
+            document.querySelectorAll('.dashboard-container, .stat-card, .chart-container, .table-container, .filters-section').forEach(e=>{
+                e.style.background = '#232526';
+                e.style.color = '#fff';
+            });
+            document.querySelectorAll('table').forEach(e=>e.style.background='#232526');
+        } else {
+            document.body.style.background = 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)';
+            root.style.setProperty('--main-bg', '#fff');
+            root.style.setProperty('--main-fg', '#232526');
+            root.style.setProperty('--card-bg', '#fff');
+            root.style.setProperty('--text-color', '#232526');
+            root.style.setProperty('--primary', color);
+            document.querySelectorAll('.dashboard-container, .stat-card, .chart-container, .table-container, .filters-section').forEach(e=>{
+                e.style.background = '';
+                e.style.color = '';
+            });
+            document.querySelectorAll('table').forEach(e=>e.style.background='');
+        }
+        // Cambiar color principal en botones
+        document.querySelectorAll('.btn-primary').forEach(btn=>{
+            btn.style.background = `linear-gradient(135deg, ${color}, #2980b9)`;
+        });
+    }
+    toggleDark.onclick = function() {
+        const dark = localStorage.getItem('darkMode') === 'true';
+        localStorage.setItem('darkMode', !dark);
+        applyTheme();
+    };
+    themeColor.oninput = function() {
+        localStorage.setItem('themeColor', this.value);
+        applyTheme();
+    };
+    // Inicializar
+    applyTheme();
+    </script>
+    <script>
+    // Guía rápida y modal de bienvenida
+    function showWelcome(force=false) {
+        if (!force && localStorage.getItem('welcomeSeen') === 'true') return;
+        document.getElementById('welcomeModal').style.display = 'flex';
+        let step = 0;
+        const steps = document.querySelectorAll('#guideSteps .guide-step');
+        const nextBtn = document.getElementById('nextStep');
+        const prevBtn = document.getElementById('prevStep');
+        const closeBtn = document.getElementById('closeWelcome');
+        function updateStep() {
+            steps.forEach((el,i)=>el.style.display = i===step?'block':'none');
+            prevBtn.style.display = step>0?'inline-block':'none';
+            nextBtn.style.display = step<steps.length-1?'inline-block':'none';
+            closeBtn.style.display = step===steps.length-1?'inline-block':'none';
+        }
+        nextBtn.onclick = ()=>{ step++; updateStep(); };
+        prevBtn.onclick = ()=>{ step--; updateStep(); };
+        closeBtn.onclick = ()=>{
+            document.getElementById('welcomeModal').style.display = 'none';
+            localStorage.setItem('welcomeSeen','true');
+        };
+        updateStep();
+    }
+    // Mostrar al cargar si es la primera vez
+    window.addEventListener('DOMContentLoaded',()=>{
+        showWelcome();
+        document.getElementById('showGuide').onclick = ()=>showWelcome(true);
+    });
+    </script>
+</body>
+</html>

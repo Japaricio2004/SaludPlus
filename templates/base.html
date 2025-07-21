@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Seguimiento Personal{% endblock %}</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #222; min-height: 100vh; margin: 0; }
+        .container { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 2rem; }
+        header { text-align: center; margin-bottom: 2rem; }
+        header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        header p { color: #666; font-size: 1rem; }
+        .flash { margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: #e0f7fa; color: #00796b; text-align: center; }
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+    {% block styles %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{% block header_title %}Seguimiento Personal{% endblock %}</h1>
+            <p>{% block header_subtitle %}Gestiona y monitorea tu progreso{% endblock %}</p>
+        </header>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

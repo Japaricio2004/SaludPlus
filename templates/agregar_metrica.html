@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Métrica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .metrica-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metrica-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12, #e74c3c);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-subtitle {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .flash {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .flash.error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: #2c3e50;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group input:valid,
+        .form-group select:valid,
+        .form-group textarea:valid {
+            border-color: #2ecc71;
+        }
+
+        .form-group input[type="number"] {
+            text-align: right;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding-left: 2.5rem;
+        }
+
+        .character-count {
+            position: absolute;
+            right: 0.5rem;
+            bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 0.8rem;
+            background: transparent;
+            color: #7f8c8d;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #ecf0f1;
+            border-color: #bdc3c7;
+            transform: translateY(-1px);
+        }
+
+        .quick-suggestions {
+            margin-bottom: 1rem;
+        }
+
+        .suggestions-title {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .suggestion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .suggestion-tag {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .suggestion-tag:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .validation-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .form-group.invalid .validation-message {
+            display: block;
+        }
+
+        .form-group.invalid input,
+        .form-group.invalid select,
+        .form-group.invalid textarea {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .progress-indicator {
+            height: 4px;
+            background: #ecf0f1;
+            border-radius: 2px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .metrica-container {
+                padding: 2rem 1.5rem;
+                margin: 0.5rem;
+                border-radius: 16px;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .date-input-group {
+            position: relative;
+        }
+
+        .today-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="metrica-container">
+        <div class="form-header">
+            <h2 class="form-title">📊 Nueva Métrica</h2>
+            <p class="form-subtitle">Registra y monitorea tu progreso</p>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ 'error' if category == 'error' else '' }}">
+                {{ '✅' if category != 'error' else '❌' }} {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" id="metricaForm" novalidate>
+            <div class="form-group">
+                <label for="tipo">
+                    🏷️ Tipo de métrica
+                    <span class="tooltip" data-tooltip="Ejemplo: Peso, Ejercicio, Lectura">ℹ️</span>
+                </label>
+                <div class="quick-suggestions">
+                    <div class="suggestions-title">Sugerencias populares:</div>
+                    <div class="suggestion-tags">
+                        <span class="suggestion-tag" onclick="selectSuggestion('tipo', 'Peso')">Peso</span>
+                        <span class="suggestion-tag" onclick="selectSuggestion('tipo', 'Ejercicio')">Ejercicio</span>
+                        <span class="suggestion-tag" onclick="selectSuggestion('tipo', 'Lectura')">Lectura</span>
+                        <span class="suggestion-tag" onclick="selectSuggestion('tipo', 'Agua')">Agua</span>
+                        <span class="suggestion-tag" onclick="selectSuggestion('tipo', 'Sueño')">Sueño</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="tipo" name="tipo" required maxlength="50" 
+                           placeholder="Ej: Peso corporal, Tiempo de ejercicio...">
+                </div>
+                <div class="validation-message">El tipo de métrica es requerido</div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="valor">
+                        🔢 Valor
+                    </label>
+                    <div class="input-group">
+                        <input type="number" id="valor" name="valor" required step="0.01" 
+                               placeholder="0.00" min="0">
+                    </div>
+                    <div class="validation-message">Ingresa un valor válido</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="unidad">
+                        📏 Unidad
+                    </label>
+                    <select id="unidad" name="unidad" required>
+                        <option value="">Seleccionar unidad</option>
+                        <optgroup label="Peso">
+                            <option value="kg">Kilogramos (kg)</option>
+                            <option value="g">Gramos (g)</option>
+                            <option value="lb">Libras (lb)</option>
+                        </optgroup>
+                        <optgroup label="Distancia">
+                            <option value="km">Kilómetros (km)</option>
+                            <option value="m">Metros (m)</option>
+                            <option value="cm">Centímetros (cm)</option>
+                        </optgroup>
+                        <optgroup label="Tiempo">
+                            <option value="horas">Horas</option>
+                            <option value="minutos">Minutos</option>
+                            <option value="segundos">Segundos</option>
+                        </optgroup>
+                        <optgroup label="Energía/Salud">
+                            <option value="calorías">Calorías</option>
+                            <option value="kcal">Kilocalorías</option>
+                            <option value="pasos">Pasos</option>
+                        </optgroup>
+                        <optgroup label="Frecuencia">
+                            <option value="veces">Veces</option>
+                            <option value="series">Series</option>
+                            <option value="repeticiones">Repeticiones</option>
+                        </optgroup>
+                        <optgroup label="Volumen">
+                            <option value="litros">Litros</option>
+                            <option value="ml">Mililitros</option>
+                        </optgroup>
+                        <option value="otro">Otra unidad</option>
+                    </select>
+                    <div class="validation-message">Selecciona una unidad</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria_id">
+                    🏷️ Categoría
+                </label>
+                <select id="categoria_id" name="categoria_id" required>
+                    <option value="">Selecciona una categoría</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <div class="validation-message">Selecciona una categoría</div>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha">
+                    📅 Fecha
+                </label>
+                <div class="date-input-group">
+                    <input type="date" id="fecha" name="fecha" required>
+                    <button type="button" class="today-btn" onclick="setToday()">Hoy</button>
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function() {
+                        var f = document.getElementById('fecha');
+                        if (!f.value) {
+                          const today = new Date();
+                          const yyyy = today.getFullYear();
+                          const mm = String(today.getMonth() + 1).padStart(2, '0');
+                          const dd = String(today.getDate()).padStart(2, '0');
+                          f.value = yyyy + '-' + mm + '-' + dd;
+                        }
+                      });
+                    </script>
+                </div>
+                <div class="validation-message">Selecciona una fecha válida</div>
+            </div>
+
+            <div class="form-group">
+                <label for="nota">
+                    📝 Nota / Comentario
+                    <span style="font-weight: normal; color: #7f8c8d;">(opcional)</span>
+                </label>
+                <textarea id="nota" name="nota" rows="3" maxlength="255" 
+                          placeholder="Agrega cualquier detalle adicional sobre esta métrica..."></textarea>
+                <div class="character-count" id="characterCount">0/255</div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ url_for('main.dashboard') }}" class="btn-secondary">
+                    ← Cancelar
+                </a>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span>💾 Guardar Métrica</span>
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Variables globales
+        const form = document.getElementById('metricaForm');
+        const progressBar = document.getElementById('progressBar');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const characterCount = document.getElementById('characterCount');
+        const notaTextarea = document.getElementById('nota');
+
+        // Configurar fecha actual por defecto
+        // document.getElementById('fecha').valueAsDate = new Date();
+        // No modificar el valor del campo fecha por JS, solo usar el valor de Jinja
+
+        // Función para establecer fecha actual
+        function setToday() {
+            document.getElementById('fecha').valueAsDate = new Date();
+        }
+
+        // Contador de caracteres
+        notaTextarea.addEventListener('input', function() {
+            const current = this.value.length;
+            const max = this.getAttribute('maxlength');
+            characterCount.textContent = `${current}/${max}`;
+            
+            if (current > max * 0.9) {
+                characterCount.style.color = '#e74c3c';
+            } else {
+                characterCount.style.color = '#7f8c8d';
+            }
+        });
+
+        // Función para seleccionar sugerencias
+        function selectSuggestion(fieldId, value) {
+            const field = document.getElementById(fieldId);
+            field.value = value;
+            field.dispatchEvent(new Event('input'));
+            
+            // Efecto visual
+            const tag = event.target;
+            tag.style.background = 'rgba(46, 204, 113, 0.2)';
+            tag.style.color = '#27ae60';
+            setTimeout(() => {
+                tag.style.background = 'rgba(52, 152, 219, 0.1)';
+                tag.style.color = '#3498db';
+            }, 500);
+            
+            updateProgress();
+        }
+
+        // Validación en tiempo real
+        function setupRealTimeValidation() {
+            const requiredFields = form.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                field.addEventListener('input', validateField);
+                field.addEventListener('blur', validateField);
+            });
+        }
+
+        function validateField(event) {
+            const field = event.target;
+            const formGroup = field.closest('.form-group');
+            const isValid = field.checkValidity() && field.value.trim() !== '';
+            
+            if (isValid) {
+                formGroup.classList.remove('invalid');
+            } else {
+                formGroup.classList.add('invalid');
+            }
+            
+            updateProgress();
+        }
+
+        // Actualizar barra de progreso
+        function updateProgress() {
+            const requiredFields = form.querySelectorAll('[required]');
+            const filledFields = Array.from(requiredFields).filter(field => 
+                field.checkValidity() && field.value.trim() !== ''
+            );
+            
+            const progress = (filledFields.length / requiredFields.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        // Validación del formulario
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = form.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                const formGroup = field.closest('.form-group');
+                if (!field.checkValidity() || field.value.trim() === '') {
+                    formGroup.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    formGroup.classList.remove('invalid');
+                }
+            });
+
+            return isValid;
+        }
+
+        // Manejo del envío del formulario
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                // Hacer scroll al primer campo inválido
+                const firstInvalid = form.querySelector('.form-group.invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+
+            // Mostrar estado de carga
+            submitBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            submitBtn.querySelector('span').textContent = 'Guardando...';
+
+            // Simular envío (en producción esto sería el envío real)
+            setTimeout(() => {
+                form.submit();
+            }, 1000);
+        });
+
+        // Auto-sugerencias inteligentes basadas en el tipo
+        document.getElementById('tipo').addEventListener('input', function() {
+            const tipo = this.value.toLowerCase();
+            const unidadSelect = document.getElementById('unidad');
+            
+            // Auto-sugerir unidades basadas en el tipo
+            if (tipo.includes('peso') || tipo.includes('masa')) {
+                unidadSelect.value = 'kg';
+            } else if (tipo.includes('distancia') || tipo.includes('carrera') || tipo.includes('caminar')) {
+                unidadSelect.value = 'km';
+            } else if (tipo.includes('tiempo') || tipo.includes('ejercicio') || tipo.includes('sueño')) {
+                unidadSelect.value = 'minutos';
+            } else if (tipo.includes('agua') || tipo.includes('líquido')) {
+                unidadSelect.value = 'litros';
+            } else if (tipo.includes('calorías') || tipo.includes('comida')) {
+                unidadSelect.value = 'calorías';
+            } else if (tipo.includes('paso') || tipo.includes('caminar')) {
+                unidadSelect.value = 'pasos';
+            }
+        });
+
+        // Formateo automático de números
+        document.getElementById('valor').addEventListener('input', function() {
+            let value = this.value;
+            if (value && !isNaN(value)) {
+                // Limitar a 2 decimales
+                if (value.includes('.') && value.split('.')[1].length > 2) {
+                    this.value = parseFloat(value).toFixed(2);
+                }
+            }
+        });
+
+        // Atajos de teclado
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter para enviar
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                form.dispatchEvent(new Event('submit'));
+            }
+            
+            // Escape para cancelar
+            if (e.key === 'Escape') {
+                if (confirm('¿Deseas salir sin guardar?')) {
+                    window.location.href = "{{ url_for('main.dashboard') }}";
+                }
+            }
+        });
+
+        // Inicializar validación en tiempo real
+        setupRealTimeValidation();
+        updateProgress();
+
+        // Animación de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.metrica-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.5s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
