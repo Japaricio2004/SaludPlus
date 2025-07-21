@@ -1154,8 +1154,14 @@
     }
     // Mostrar al cargar si es la primera vez
     window.addEventListener('DOMContentLoaded',()=>{
-        showWelcome();
+        showWelcome(true);
         document.getElementById('showGuide').onclick = ()=>showWelcome(true);
+        // Cerrar modal al hacer clic fuera del contenido
+        document.getElementById('welcomeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
     });
     </script>
 </body>
