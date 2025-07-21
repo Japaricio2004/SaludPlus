@@ -13,7 +13,10 @@
         header { text-align: center; margin-bottom: 2rem; }
         header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
         header p { color: #666; font-size: 1rem; }
-        .flash { margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: #e0f7fa; color: #00796b; text-align: center; }
+        .flash { margin-bottom: 1rem; padding: 1rem; border-radius: 8px; text-align: center; }
+        .flash.success { background: #e6f9ec; color: #218838; border: 1px solid #b7ebc2; }
+        .flash.danger { background: #fdecea; color: #c82333; border: 1px solid #f5c6cb; }
+        .flash.info { background: #e7f3fe; color: #0c5460; border: 1px solid #bee5eb; }
         a { color: #2563eb; text-decoration: none; }
         a:hover { text-decoration: underline; }
     </style>
@@ -29,7 +32,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="flash">{{ message }}</div>
+                    <div class="flash {{ category }}">{{ message }}</div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
