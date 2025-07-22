@@ -1159,8 +1159,9 @@
     }
     // Mostrar solo la primera vez tras login
     window.addEventListener('DOMContentLoaded',()=>{
-        if (localStorage.getItem('welcomeSeen') !== 'true') {
+        if (!sessionStorage.getItem('welcomeShown')) {
             showWelcome();
+            sessionStorage.setItem('welcomeShown', 'true');
         }
         document.getElementById('showGuide').onclick = ()=>showWelcome(true);
         // Cerrar modal al hacer clic fuera del contenido
