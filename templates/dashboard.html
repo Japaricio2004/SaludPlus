@@ -573,9 +573,14 @@
                 <div style="text-align:right;">
                     <button id="toggleDark" class="btn-primary" style="margin-bottom:0.5rem;" title="Cambia entre modo claro y oscuro">🌙/☀️</button>
                     <button id="toggleContrast" class="btn-primary" style="margin-bottom:0.5rem;" title="Alto contraste">🌓 Contraste</button>
-                    <form action="{{ url_for('main.logout') }}" method="get" style="display:inline; margin-left:0.5rem;">
-                        <button type="submit" class="btn-primary btn-logout" style="margin-bottom:0.5rem;">🚪 Cerrar Sesión</button>
+                    <form id="logoutForm" action="{{ url_for('main.logout') }}" method="get" style="display:inline; margin-left:0.5rem;">
+                    <button type="submit" class="btn-primary btn-logout" style="margin-bottom:0.5rem;">🚪 Cerrar Sesión</button>
                     </form>
+                    <script>
+                    document.getElementById('logoutForm').addEventListener('submit', function() {
+                    localStorage.removeItem('welcomeSeen');
+                    });
+                    </script>
                     <br>
                     <label style="font-size:0.9rem;">Color principal:
                         <input type="color" id="themeColor" value="#3498db" style="width:32px;height:32px;border:none;vertical-align:middle;" title="Personaliza el color principal">
@@ -1152,9 +1157,11 @@
         };
         updateStep();
     }
-    // Mostrar al cargar si es la primera vez
+    // Mostrar solo la primera vez tras login
     window.addEventListener('DOMContentLoaded',()=>{
-        showWelcome(true);
+        if (localStorage.getItem('welcomeSeen') !== 'true') {
+            showWelcome();
+        }
         document.getElementById('showGuide').onclick = ()=>showWelcome(true);
         // Cerrar modal al hacer clic fuera del contenido
         document.getElementById('welcomeModal').addEventListener('click', function(e) {
