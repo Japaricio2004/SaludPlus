@@ -80,7 +80,7 @@ SaludPlus/
 ```
 
 ## Créditos
-Desarrollado por Japaricio2004.
+Desarrollado por Jorge Luis Aparicio Alvarez / Ing.Software.
 
 ## Licencia
 Este proyecto está bajo la licencia MIT. Puedes modificarlo y usarlo libremente.
