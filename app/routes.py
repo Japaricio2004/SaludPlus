@@ -230,7 +230,7 @@ def eliminar_metrica(id):
 @login_required
 def logout():
     logout_user()
-    flash('Has cerrado sesión', 'info')
+    flash('Has cerrado sesión', 'danger')
     return redirect(url_for('main.login'))
 
 # ----------------------
