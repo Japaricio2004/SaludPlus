@@ -111,10 +111,14 @@ def dashboard():
                 pass
         alertas[nombre] = alerta
 
-    # Calcular métricas de hoy independientemente de los filtros
+    # Calcular métricas de hoy independientemente de los filtros (rango robusto)
+    from datetime import datetime, timedelta
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
     metricas_hoy = Metrica.query.filter(
         Metrica.usuario_id == current_user.id,
-        Metrica.fecha == date.today()
+        Metrica.fecha >= today,
+        Metrica.fecha < tomorrow
     ).count()
     return render_template('dashboard.html', metricas=metricas, metricas_json=metricas_json, total_categorias=total_categorias, stats=stats, objetivos=objetivos, tendencias=tendencias, alertas=alertas, metricas_hoy=metricas_hoy, date=date)
 
