@@ -262,40 +262,106 @@ button:active {
   0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-@media (max-width: 700px) {
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (768px and below) */
+@media (max-width: 768px) {
   .register-container {
-    width: 98%;
-    padding: 1.5rem 0.7rem;
-    margin: 0.5rem;
+    width: 95%;
+    padding: 2rem 1.5rem;
+    margin: 1rem;
   }
+  
+  h2 {
+    font-size: clamp(1.4rem, 5vw, 1.6rem);
+  }
+  
   .input-wrapper,
   .show-password,
   .btn-wrapper {
     max-width: 100%;
   }
-  h2 {
-    font-size: 1.3rem;
-  }
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
+  
   input[type="email"],
   input[type="password"],
   input[type="text"] {
-    font-size: 0.95rem;
-    padding: 0.9rem 0.8rem;
+    min-height: 44px; /* Touch target */
+    font-size: 16px; /* Evita zoom en iOS */
+    padding: 1rem;
   }
+  
   button {
-    font-size: 0.98rem;
+    min-height: 44px;
+    font-size: 1rem;
     padding: 1rem;
   }
 }
-@media (max-width: 400px) {
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .register-container {
+    width: 98%;
+    padding: 1.5rem 1rem;
+    margin: 0.5rem;
+  }
+  
+  .saludplus-logo {
+    max-width: 90px;
+    max-height: 90px;
+  }
+  
+  .saludplus-title {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: clamp(1.2rem, 6vw, 1.4rem);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    font-size: 16px;
+    padding: 0.9rem 0.8rem;
+  }
+  
+  button {
+    font-size: 0.95rem;
+    padding: 1rem;
+  }
+  
+  .links {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile Small (360px and below) */
+@media (max-width: 360px) {
+  .register-container {
+    padding: 1rem 0.6rem;
+  }
+  
+  .saludplus-logo {
+    max-width: 70px;
+    max-height: 70px;
+  }
+  
+  .saludplus-title {
+    font-size: 1.6rem;
+  }
+  
   h2 {
     font-size: 1.1rem;
   }
-  .register-container {
-    padding: 1rem 0.3rem;
+  
+  button {
+    font-size: 0.9rem;
   }
 }
 </style>

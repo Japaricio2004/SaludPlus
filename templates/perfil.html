@@ -187,18 +187,180 @@
         margin-top: 0.5rem;
     }
 
+    .btn-back {
+        background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        color: white;
+        padding: 0.9rem 2rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+    }
+
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(149, 165, 166, 0.4);
+        background: linear-gradient(135deg, #7f8c8d, #6c7a89);
+    }
+
+    /* ============================================
+       RESPONSIVE DESIGN
+       ============================================ */
+    
+    /* Tablet (768px and below) */
     @media (max-width: 768px) {
-        .form-grid {
-            grid-template-columns: 1fr;
+        .perfil-container {
+            padding: 1.2rem;
+            margin: 1rem auto;
         }
         
+        .perfil-header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+        }
+        
+        .perfil-header p {
+            font-size: 1rem;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+        }
+        
+        .perfil-form {
+            padding: 1.8rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            min-height: 44px; /* Touch target */
+            font-size: 16px; /* Evita zoom en iOS */
+        }
+        
+        .btn-save {
+            width: 100%;
+            justify-content: center;
+            padding: 0.9rem 2rem;
+        }
+        
+        .btn-back {
+            width: auto;
+            padding: 0.7rem 1.2rem;
+        }
+        
+        .rangos-section {
+            padding: 1.5rem;
+        }
+        
+        .rangos-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+    
+    /* Mobile (480px and below) */
+    @media (max-width: 480px) {
         .perfil-container {
+            padding: 0.8rem;
+            margin: 0.5rem auto;
+        }
+        
+        .perfil-header {
+            margin-bottom: 2rem;
+        }
+        
+        .perfil-header h1 {
+            font-size: clamp(1.5rem, 6vw, 1.8rem);
+        }
+        
+        .perfil-header p {
+            font-size: 0.9rem;
+        }
+        
+        .perfil-form {
+            padding: 1.2rem;
+            border-radius: 16px;
+        }
+        
+        .form-grid {
+            gap: 1rem;
+        }
+        
+        .form-group label {
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.8rem 1rem;
+            font-size: 16px;
+        }
+        
+        .btn-save {
+            padding: 0.85rem 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .btn-back {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .rangos-section h2 {
+            font-size: 1.3rem;
+        }
+        
+        .rango-card {
             padding: 1rem;
+        }
+        
+        .rango-card h3 {
+            font-size: 1rem;
+        }
+        
+        .rango-card p {
+            font-size: 0.85rem;
+        }
+    }
+    
+    /* Mobile Small (360px and below) */
+    @media (max-width: 360px) {
+        .perfil-container {
+            padding: 0.6rem;
+        }
+        
+        .perfil-header h1 {
+            font-size: 1.4rem;
+        }
+        
+        .perfil-form {
+            padding: 1rem;
+        }
+        
+        .btn-save {
+            padding: 0.75rem 1.2rem;
+            font-size: 0.95rem;
         }
     }
 </style>
 
 <div class="perfil-container">
+    <!-- Botón de retroceso -->
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('main.dashboard') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+
     <div class="perfil-header">
         <h1><i class="fas fa-user-circle"></i> Mi Perfil</h1>
         <p>Completa tu información para obtener recomendaciones personalizadas</p>

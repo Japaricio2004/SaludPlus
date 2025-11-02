@@ -142,7 +142,15 @@ def dashboard():
         Metrica.fecha >= today,
         Metrica.fecha < tomorrow
     ).count()
-    return render_template('dashboard.html', metricas=metricas, metricas_json=metricas_json, total_categorias=total_categorias, stats=stats, objetivos=objetivos, tendencias=tendencias, alertas=alertas, metricas_hoy=metricas_hoy, date=date)
+    
+    # Obtener rangos saludables basados en el perfil del usuario
+    from app.models import PerfilUsuario
+    perfil = PerfilUsuario.query.filter_by(usuario_id=current_user.id).first()
+    rangos_saludables = None
+    if perfil and perfil.altura:
+        rangos_saludables = calcular_rangos_saludables(perfil)
+    
+    return render_template('dashboard.html', metricas=metricas, metricas_json=metricas_json, total_categorias=total_categorias, stats=stats, objetivos=objetivos, tendencias=tendencias, alertas=alertas, metricas_hoy=metricas_hoy, date=date, rangos_saludables=rangos_saludables, perfil=perfil)
 
 # Ruta para login
 @main.route('/login', methods=['GET', 'POST'])

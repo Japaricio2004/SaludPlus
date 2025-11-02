@@ -219,6 +219,31 @@
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 2.5rem;
+            position: relative;
+        }
+        
+        /* Indicador de scroll para móvil */
+        .table-container::after {
+            content: '← Desliza →';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .table-container::after {
+                opacity: 0.8;
+            }
         }
 
         table {
@@ -376,17 +401,28 @@
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
+        
+        /* Ajuste para pantallas medianas */
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
         .stat-card {
             background: white;
-            padding: 2rem;
+            padding: 1.8rem;
             border-radius: 16px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             text-align: left;
             transition: all 0.3s ease;
             border: 2px solid transparent;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .stat-card::before {
@@ -397,73 +433,212 @@
             width: 4px;
             height: 100%;
             background: linear-gradient(180deg, #3498db, #2ecc71);
+            border-radius: 16px 0 0 16px;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-            border-color: #3498db;
+            border-color: rgba(52, 152, 219, 0.3);
         }
 
         .stat-card-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .stat-card-header > div:first-child {
+            flex: 1;
+            min-width: 0; /* Permite que el texto se contraiga */
         }
 
         .stat-icon {
-            font-size: 2.5rem;
-            opacity: 0.2;
+            font-size: 2.2rem;
+            opacity: 0.15;
+            flex-shrink: 0;
         }
 
         .stat-card h3 {
             color: #7f8c8d;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
             font-weight: 600;
+            line-height: 1.3;
         }
 
         .stat-card .stat-value {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1;
+            line-height: 1.1;
+            display: block;
+            word-break: break-word;
         }
 
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile First Approach
+           ============================================ */
+        
+        /* Desktop Large - Optimizaciones */
+        @media (min-width: 1400px) {
+            .dashboard-container {
+                max-width: 1600px;
+            }
+            .stats-cards {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+        
+        /* Tablet Landscape (1024px and below) */
         @media (max-width: 1024px) {
             .dashboard-container {
                 padding: 1.5rem;
+                margin: 1rem;
             }
             .stats-cards {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1rem;
             }
             .header {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 1.2rem;
             }
             .header-right {
                 align-items: flex-start;
                 width: 100%;
             }
             .main-title {
-                font-size: 2.2rem;
+                font-size: clamp(1.8rem, 4vw, 2.2rem);
+            }
+            .metrics-cards {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             }
         }
-        @media (max-width: 800px) {
+
+        /* Tablet Portrait (768px and below) */
+        @media (max-width: 768px) {
             .dashboard-container {
-                padding: 1rem;
-                margin: 0.5rem;
+                padding: 1.2rem;
+                margin: 0.6rem;
                 border-radius: 16px;
             }
+            
             .main-title {
-                font-size: 1.8rem;
+                font-size: clamp(1.5rem, 5vw, 1.8rem);
             }
+            
+            /* Header y botones de acción */
+            .header {
+                gap: 1rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .header-left {
+                width: 100%;
+            }
+            
+            .header-right {
+                width: 100%;
+            }
+            
+            /* Welcome badge más compacto */
+            .welcome-badge {
+                padding: 0.5rem 0.8rem !important;
+                gap: 0.5rem !important;
+                margin-bottom: 0.6rem !important;
+            }
+            
+            .welcome-badge .fa-hand-sparkles {
+                font-size: 1.1rem !important;
+            }
+            
+            .welcome-badge p {
+                font-size: 0.7rem !important;
+            }
+            
+            .welcome-badge .username-display {
+                font-size: 0.95rem !important;
+            }
+            
+            /* Título principal más pequeño */
+            .header-left h1.main-title {
+                font-size: 1.5rem !important;
+                gap: 0.5rem !important;
+                margin: 0.3rem 0 !important;
+            }
+            
+            .header-left h1.main-title i {
+                font-size: 1.4rem !important;
+            }
+            
+            /* Subtítulo más compacto */
+            .header-left .subtitle {
+                font-size: 0.8rem !important;
+                gap: 0.3rem !important;
+                margin-top: 0.2rem !important;
+            }
+            
+            /* Botones del header - grid profesional en móvil */
+            .header-actions {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.6rem !important;
+                width: 100%;
+            }
+            
+            .btn-header-action {
+                padding: 0.8rem 0.4rem !important;
+                font-size: 0.75rem !important;
+                min-height: 70px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 0.4rem !important;
+                border-radius: 12px !important;
+                background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+                box-shadow: 0 3px 10px rgba(44, 62, 80, 0.3) !important;
+                transition: all 0.3s ease !important;
+                border: none !important;
+            }
+            
+            .btn-header-action:hover,
+            .btn-header-action:active {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 5px 15px rgba(44, 62, 80, 0.5) !important;
+            }
+            
+            .btn-header-action.btn-logout {
+                background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+                box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3) !important;
+            }
+            
+            .btn-header-action.btn-logout:hover,
+            .btn-header-action.btn-logout:active {
+                box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4) !important;
+            }
+            
+            .btn-header-action i {
+                font-size: 1.5rem !important;
+                margin: 0 !important;
+            }
+            
+            .btn-header-action .btn-text {
+                display: block !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.3px !important;
+            }
+            
             .actions-bar {
                 flex-direction: column;
                 align-items: stretch;
@@ -472,9 +647,12 @@
             .btn-primary, .actions-bar label.btn-primary {
                 width: 100%;
                 justify-content: center;
+                min-height: 44px; /* Touch target */
                 font-size: 0.95rem;
-                padding: 0.8rem 1rem;
+                padding: 0.85rem 1rem;
             }
+            
+            /* Filtros en columna */
             .filters-form {
                 flex-direction: column;
                 align-items: stretch;
@@ -482,63 +660,556 @@
             }
             .filter-group {
                 justify-content: flex-start;
+                width: 100%;
             }
+            .filter-group select,
+            .filter-group input {
+                width: 100%;
+                min-height: 44px;
+                font-size: 16px; /* Evita zoom en iOS */
+            }
+            
+            /* Cards de estadísticas en 1 columna */
+            .stats-cards {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .stat-card {
+                padding: 1.5rem;
+                min-height: 130px;
+            }
+            .stat-card h3 {
+                font-size: 0.85rem;
+            }
+            .stat-label {
+                font-size: 0.9rem;
+            }
+            .stat-value {
+                font-size: clamp(2rem, 6vw, 2.3rem) !important;
+            }
+            .stat-icon {
+                font-size: 2rem;
+            }
+            
+            /* Métricas en 1 columna */
+            .metrics-cards {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            /* Cards de métricas más espaciados en tablet */
+            [data-metric-card] {
+                padding: 1.5rem !important;
+            }
+            
+            [data-metric-card] h3 {
+                font-size: 1.3rem !important;
+            }
+            
+            [data-metric-card] > div:nth-of-type(2) {
+                padding: 1.2rem !important;
+            }
+            
+            [data-metric-card] > div:nth-of-type(2) > div:last-child {
+                font-size: 2rem !important;
+            }
+            
+            /* Tablas con scroll horizontal */
             .table-container {
                 overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 12px;
+                box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
             }
             table {
-                min-width: 520px;
+                min-width: 600px;
                 font-size: 0.9rem;
             }
             th, td {
                 padding: 0.8rem 0.5rem;
                 word-break: break-word;
             }
-            .stats-cards {
-                grid-template-columns: 1fr;
-            }
-            .stat-card {
-                padding: 1.5rem;
-            }
+            
+            /* Gráficos optimizados */
             .chart-container {
                 padding: 1rem;
-                min-height: 300px;
+                min-height: 350px;
             }
             #metricasChart {
-                min-height: 200px;
+                min-height: 300px !important;
+                max-height: 400px !important;
             }
             .filters-section {
                 padding: 1rem;
             }
             .chart-title {
-                font-size: 1.3rem;
+                font-size: clamp(1.2rem, 4vw, 1.4rem);
+            }
+            
+            /* Inputs y formularios touch-friendly */
+            input, select, textarea {
+                min-height: 44px;
+                font-size: 16px;
+                padding: 0.75rem;
             }
         }
+
+        /* Mobile Large (480px and below) */
         @media (max-width: 480px) {
             .dashboard-container {
                 padding: 0.8rem;
+                margin: 0.4rem;
+                border-radius: 14px;
             }
+            
+            /* Header compacto */
             .main-title {
-                font-size: 1.5rem;
+                font-size: clamp(1.3rem, 6vw, 1.5rem);
             }
-            .stat-card .stat-value {
-                font-size: 2rem;
+            .main-title i {
+                font-size: 1.2rem;
             }
+            
+            /* Welcome badge aún más compacto */
+            .welcome-badge {
+                padding: 0.4rem 0.6rem !important;
+                gap: 0.4rem !important;
+                margin-bottom: 0.5rem !important;
+                border-radius: 8px !important;
+            }
+            
+            .welcome-badge .fa-hand-sparkles {
+                font-size: 1rem !important;
+            }
+            
+            .welcome-badge p {
+                font-size: 0.65rem !important;
+            }
+            
+            .welcome-badge .username-display {
+                font-size: 0.85rem !important;
+            }
+            
+            /* Título principal más pequeño */
+            .header-left h1.main-title {
+                font-size: 1.3rem !important;
+                gap: 0.4rem !important;
+            }
+            
+            .header-left h1.main-title i {
+                font-size: 1.2rem !important;
+            }
+            
+            /* Subtítulo más pequeño */
+            .header-left .subtitle {
+                font-size: 0.75rem !important;
+            }
+            
+            /* Botones más compactos pero profesionales */
+            .btn-header-action {
+                padding: 0.65rem 0.3rem !important;
+                font-size: 0.7rem !important;
+                gap: 0.35rem !important;
+                min-height: 65px !important;
+            }
+            
+            .btn-header-action i {
+                font-size: 1.4rem !important;
+            }
+            
+            .header-actions {
+                gap: 0.5rem !important;
+            }
+            
+            /* Stats más compactos */
+            .stat-card {
+                padding: 1.2rem;
+                min-height: 120px;
+            }
+            .stat-card h3 {
+                font-size: 0.8rem;
+            }
+            .stat-label {
+                font-size: 0.85rem;
+            }
+            .stat-value {
+                font-size: clamp(1.8rem, 8vw, 2rem) !important;
+                margin: 0.4rem 0;
+            }
+            .stat-icon {
+                font-size: 1.8rem;
+            }
+            .stat-change {
+                font-size: 0.75rem;
+            }
+            
+            /* Health status indicators */
+            .stat-card.in-range::before,
+            .stat-card.out-of-range::before {
+                width: 3px;
+            }
+            .stat-card.in-range i.fa-circle-check,
+            .stat-card.out-of-range i.fa-circle-exclamation {
+                font-size: 1rem;
+                top: 0.8rem;
+                right: 0.8rem;
+            }
+            
+            /* Botones compactos */
             .btn-primary, .actions-bar label.btn-primary {
                 font-size: 0.9rem;
                 padding: 0.7rem 0.8rem;
+                min-height: 42px;
+            }
+            
+            /* Tablas */
+            table {
+                min-width: 520px;
             }
             th, td {
-                font-size: 0.85rem;
-                padding: 0.6rem 0.3rem;
+                font-size: 0.8rem;
+                padding: 0.6rem 0.4rem;
+            }
+            .table-container td form input,
+            .table-container td form button {
+                font-size: 0.8rem !important;
+                padding: 0.5rem !important;
+                min-height: 38px;
+            }
+            
+            /* Gráficos más grandes en móvil */
+            .chart-container {
+                padding: 1rem;
+                min-height: 320px;
+            }
+            #metricasChart {
+                min-height: 280px !important;
+                max-height: 380px !important;
             }
             .filters-section {
                 padding: 0.8rem;
             }
-            .table-container td form input,
-            .table-container td form button {
-                font-size: 0.85rem !important;
-                padding: 0.4rem !important;
+            .chart-title {
+                font-size: 1.2rem;
+            }
+            
+            /* Objetivo cards */
+            .metric-card {
+                padding: 1rem;
+            }
+            .metric-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            /* Progress bars */
+            .progress-bar-container {
+                height: 8px;
+            }
+            
+            /* Alert cards */
+            .alert-card {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Rangos saludables */
+            .rango-card {
+                padding: 1rem;
+            }
+            .rango-card h4 {
+                font-size: 1rem;
+            }
+            .rango-card p {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Mobile Small (360px and below) */
+        @media (max-width: 360px) {
+            .dashboard-container {
+                padding: 0.6rem;
+                margin: 0.3rem;
+            }
+            
+            .main-title {
+                font-size: 1.2rem;
+            }
+            
+            /* Welcome badge ultra compacto */
+            .welcome-badge {
+                padding: 0.35rem 0.5rem !important;
+                gap: 0.3rem !important;
+                border-radius: 6px !important;
+            }
+            
+            .welcome-badge .fa-hand-sparkles {
+                font-size: 0.9rem !important;
+            }
+            
+            .welcome-badge p {
+                font-size: 0.6rem !important;
+            }
+            
+            .welcome-badge .username-display {
+                font-size: 0.75rem !important;
+            }
+            
+            /* Título ultra pequeño */
+            .header-left h1.main-title {
+                font-size: 1.1rem !important;
+            }
+            
+            .header-left h1.main-title i {
+                font-size: 1rem !important;
+            }
+            
+            /* Subtítulo ultra pequeño o ocultar */
+            .header-left .subtitle {
+                font-size: 0.7rem !important;
+            }
+            
+            /* Botones ultra compactos pero legibles */
+            .btn-header-action {
+                padding: 0.55rem 0.25rem !important;
+                font-size: 0.65rem !important;
+                gap: 0.3rem !important;
+                min-height: 60px !important;
+            }
+            
+            .btn-header-action i {
+                font-size: 1.3rem !important;
+            }
+            
+            .header-actions {
+                gap: 0.4rem !important;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            .stat-value {
+                font-size: 1.6rem;
+            }
+            
+            .metric-card,
+            .chart-container {
+                padding: 0.8rem;
+            }
+            
+            .btn-primary {
+                font-size: 0.85rem;
+                padding: 0.6rem 0.7rem;
+            }
+            
+            table {
+                min-width: 480px;
+            }
+        }
+
+        /* Landscape Mode Optimizations */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .dashboard-container {
+                padding: 0.8rem;
+                margin: 0.4rem;
+            }
+            .main-title {
+                font-size: 1.3rem;
+            }
+            .stats-cards {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            .stat-card {
+                padding: 1rem;
+            }
+            .chart-container {
+                min-height: 200px;
+            }
+            #metricasChart {
+                min-height: 180px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .actions-bar,
+            .filters-section,
+            .btn-primary,
+            button {
+                display: none !important;
+            }
+            .dashboard-container {
+                padding: 0;
+                margin: 0;
+                box-shadow: none;
+            }
+            .stat-card,
+            .metric-card,
+            .chart-container {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+        
+        /* ============================================
+           RESPONSIVE STYLES FOR METRIC CARDS
+           ============================================ */
+        
+        /* Mobile adjustments for metric cards */
+        @media (max-width: 480px) {
+            [data-metric-card] {
+                padding: 1.5rem !important;
+                border-radius: 16px !important;
+                margin-bottom: 1.2rem !important;
+            }
+            
+            [data-metric-card] h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 0.8rem !important;
+            }
+            
+            [data-metric-card] > div:first-of-type {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.6rem !important;
+            }
+            
+            /* Valor registrado más prominente */
+            [data-metric-card] > div:nth-of-type(2) {
+                padding: 1.3rem !important;
+                margin: 1rem 0 !important;
+                border-radius: 14px !important;
+            }
+            
+            [data-metric-card] > div:nth-of-type(2) > div:first-child {
+                font-size: 0.75rem !important;
+                margin-bottom: 0.5rem !important;
+                font-weight: 600 !important;
+            }
+            
+            [data-metric-card] > div:nth-of-type(2) > div:last-child {
+                font-size: 2.2rem !important;
+                font-weight: 800 !important;
+                line-height: 1.2 !important;
+            }
+            
+            [data-metric-card] > div:nth-of-type(2) > div:last-child span {
+                font-size: 1.2rem !important;
+                margin-left: 0.3rem !important;
+            }
+            
+            /* Botones más grandes y espaciados */
+            [data-metric-card] > div:last-of-type {
+                flex-direction: column !important;
+                gap: 0.8rem !important;
+                margin-top: 1rem !important;
+            }
+            
+            [data-metric-card] a,
+            [data-metric-card] form {
+                flex: none !important;
+                width: 100% !important;
+            }
+            
+            [data-metric-card] button {
+                padding: 0.85rem 1.2rem !important;
+                font-size: 0.95rem !important;
+                min-height: 48px !important;
+                font-weight: 600 !important;
+                border-radius: 12px !important;
+            }
+            
+            [data-metric-card] a {
+                padding: 0.85rem 1.2rem !important;
+                font-size: 0.95rem !important;
+                min-height: 48px !important;
+                font-weight: 600 !important;
+                border-radius: 12px !important;
+            }
+            
+            /* Botones de vista (Línea/Barras) más compactos */
+            .btn-vista {
+                padding: 0.5rem 0.7rem !important;
+                font-size: 0.8rem !important;
+            }
+            
+            .btn-vista .btn-text {
+                display: none !important;
+            }
+            
+            /* Botones de periodo solo iconos en móvil pequeño */
+            .btn-periodo {
+                padding: 0.5rem !important;
+                font-size: 0.75rem !important;
+                min-width: 60px !important;
+            }
+            
+            .btn-periodo .periodo-text {
+                font-size: 0.7rem !important;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            [data-metric-card] {
+                padding: 1rem !important;
+            }
+            
+            [data-metric-card] > div:nth-of-type(2) > div:last-child {
+                font-size: 1.6rem !important;
+            }
+            
+            /* Solo iconos en filtros de periodo */
+            .btn-periodo .periodo-text {
+                display: none !important;
+            }
+            
+            .btn-periodo {
+                padding: 0.6rem !important;
+                min-width: 44px !important;
+            }
+        }
+        
+        /* ============================================
+           RESPONSIVE STYLES FOR STATS BY TYPE SECTION
+           ============================================ */
+        
+        /* Mobile adjustments for stats mini grid */
+        @media (max-width: 768px) {
+            .stats-mini-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.6rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-mini-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            
+            .stats-mini-grid > div {
+                padding: 0.7rem !important;
+            }
+            
+            .stats-mini-grid div[style*="font-size:1.4rem"],
+            .stats-mini-grid div[style*="font-size:1.3rem"] {
+                font-size: 1.2rem !important;
+            }
+            
+            .stats-mini-grid div[style*="font-size:0.65rem"] {
+                font-size: 0.6rem !important;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .stats-mini-grid > div {
+                padding: 0.6rem !important;
+            }
+            
+            .stats-mini-grid div[style*="font-size:1.4rem"],
+            .stats-mini-grid div[style*="font-size:1.3rem"],
+            .stats-mini-grid div[style*="font-size:1.2rem"] {
+                font-size: 1.1rem !important;
             }
         }
 
@@ -631,18 +1302,36 @@
     <div class="dashboard-container" role="main" aria-label="Panel principal de métricas">
         <div class="header">
             <div class="header-left">
-                <p class="welcome-text">Bienvenido(a), <strong>{{ current_user.username }}</strong></p>
-                <h1 class="main-title">📊 Dashboard</h1>
-                <p class="subtitle">Gestiona y visualiza tus métricas de forma eficiente</p>
+                <div class="welcome-badge" style="display:inline-flex;align-items:center;gap:0.8rem;padding:0.6rem 1.2rem;background:linear-gradient(135deg,rgba(52,152,219,0.1),rgba(46,204,113,0.05));border-radius:12px;border-left:4px solid #3498db;margin-bottom:1rem;">
+                    <i class="fas fa-hand-sparkles" style="color:#f39c12;font-size:1.5rem;"></i>
+                    <div>
+                        <p style="font-size:0.85rem;color:#7f8c8d;margin:0;font-weight:500;">Hola de nuevo,</p>
+                        <p class="username-display" style="font-size:1.2rem;color:#2c3e50;margin:0;font-weight:700;">{{ current_user.username }}</p>
+                    </div>
+                </div>
+                <h1 class="main-title" style="font-size:2.8rem;margin:0.5rem 0;display:flex;align-items:center;gap:1rem;">
+                    <i class="fas fa-chart-pie" style="color:#3498db;font-size:2.5rem;"></i>
+                    <span style="background:linear-gradient(135deg,#1e3c72,#2a5298,#3498db);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+                        Dashboard
+                    </span>
+                </h1>
+                <p class="subtitle" style="font-size:1.1rem;color:#7f8c8d;display:flex;align-items:center;gap:0.5rem;margin-top:0.3rem;">
+                    <i class="fas fa-chart-line" style="color:#3498db;"></i>
+                    Gestiona y visualiza tus métricas de forma eficiente
+                </p>
             </div>
             <div class="header-right">
-                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                    <a href="{{ url_for('main.perfil') }}" class="btn-primary btn-small" title="Gestionar mi perfil" style="text-decoration:none;">
-                        <i class="fas fa-user-circle"></i> Mi Perfil
+                <div class="header-actions" style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;justify-content:flex-end;">
+                    <a href="{{ url_for('main.perfil') }}" class="btn-primary btn-small btn-header-action" title="Gestionar mi perfil" style="text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.2rem;font-size:0.9rem;white-space:nowrap;">
+                        <i class="fas fa-user-circle" style="font-size:1.1rem;"></i> <span class="btn-text">Mi Perfil</span>
                     </a>
-                    <button id="showGuide" class="btn-primary btn-small" title="Ver guía rápida de uso">❓ Ayuda</button>
+                    <button id="showGuide" class="btn-primary btn-small btn-header-action" title="Ver guía rápida de uso" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.2rem;font-size:0.9rem;white-space:nowrap;">
+                        <i class="fas fa-question-circle" style="font-size:1.1rem;"></i> <span class="btn-text">Ayuda</span>
+                    </button>
                     <form id="logoutForm" action="{{ url_for('main.logout') }}" method="get" style="display:inline;">
-                        <button type="submit" class="btn-primary btn-logout btn-small">🚪 Salir</button>
+                        <button type="submit" class="btn-primary btn-logout btn-small btn-header-action" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.2rem;font-size:0.9rem;white-space:nowrap;">
+                            <i class="fas fa-sign-out-alt" style="font-size:1.1rem;"></i> <span class="btn-text">Salir</span>
+                        </button>
                     </form>
                     <script>
                     document.getElementById('logoutForm').addEventListener('submit', function() {
@@ -752,25 +1441,87 @@
           {% endfor %}
         {% endif %}
 
-        <div class="filters-section">
-            <form method="get" class="filters-form">
-                <div class="filter-group">
-                    <input type="text" name="q" id="searchInput" class="filter-input" 
-                           placeholder="🔍 Buscar por tipo..." value="{{ request.args.get('q', '') }}">
+        <!-- Sección de Filtros Mejorada -->
+        <div style="background:white;border-radius:20px;padding:2rem;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-bottom:2.5rem;border-left:5px solid #3498db;">
+            <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;">
+                <i class="fas fa-filter" style="font-size:1.5rem;color:#3498db;"></i>
+                <h3 style="font-size:1.3rem;font-weight:700;color:#2c3e50;margin:0;">Filtros de Búsqueda</h3>
+            </div>
+            
+            <form method="get" style="display:grid;grid-template-columns:2fr 1fr 1fr auto auto;gap:1rem;align-items:end;">
+                <div>
+                    <label style="display:block;font-size:0.85rem;font-weight:600;color:#7f8c8d;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;">
+                        <i class="fas fa-search"></i> Buscar Métrica
+                    </label>
+                    <input type="text" name="q" id="searchInput" 
+                           placeholder="Ej: Peso, Presión, Glucosa..." 
+                           value="{{ request.args.get('q', '') }}"
+                           style="width:100%;padding:0.9rem 1.2rem;border:2px solid #e0e6ed;border-radius:12px;font-size:1rem;transition:all 0.3s;background:white;">
                 </div>
-                <div class="filter-group">
-                    <label>Desde:</label>
-                    <input type="date" name="fecha_inicio" class="filter-input" 
-                           value="{{ request.args.get('fecha_inicio', '') }}">
+                
+                <div>
+                    <label style="display:block;font-size:0.85rem;font-weight:600;color:#7f8c8d;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;">
+                        <i class="fas fa-calendar-alt"></i> Desde
+                    </label>
+                    <input type="date" name="fecha_inicio" 
+                           value="{{ request.args.get('fecha_inicio', '') }}"
+                           style="width:100%;padding:0.9rem 1.2rem;border:2px solid #e0e6ed;border-radius:12px;font-size:1rem;transition:all 0.3s;background:white;">
                 </div>
-                <div class="filter-group">
-                    <label>Hasta:</label>
-                    <input type="date" name="fecha_fin" class="filter-input" 
-                           value="{{ request.args.get('fecha_fin', '') }}">
+                
+                <div>
+                    <label style="display:block;font-size:0.85rem;font-weight:600;color:#7f8c8d;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.5px;">
+                        <i class="fas fa-calendar-check"></i> Hasta
+                    </label>
+                    <input type="date" name="fecha_fin" 
+                           value="{{ request.args.get('fecha_fin', '') }}"
+                           style="width:100%;padding:0.9rem 1.2rem;border:2px solid #e0e6ed;border-radius:12px;font-size:1rem;transition:all 0.3s;background:white;">
                 </div>
-                <button type="submit" class="btn-filter">🔍 Filtrar</button>
-                <a href="{{ url_for('main.dashboard') }}" class="btn-clear">🗑️ Limpiar</a>
+                
+                <button type="submit" style="padding:0.9rem 2rem;background:linear-gradient(135deg,#3498db,#2980b9);color:white;border:none;border-radius:12px;font-weight:600;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 15px rgba(52,152,219,0.3);display:flex;align-items:center;gap:0.5rem;">
+                    <i class="fas fa-search"></i> Filtrar
+                </button>
+                
+                <a href="{{ url_for('main.dashboard') }}" style="padding:0.9rem 1.5rem;background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:white;border:none;border-radius:12px;font-weight:600;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 15px rgba(149,165,166,0.3);text-decoration:none;display:flex;align-items:center;gap:0.5rem;">
+                    <i class="fas fa-redo"></i> Limpiar
+                </a>
             </form>
+            
+            <style>
+                input[type="text"]:focus,
+                input[type="date"]:focus {
+                    outline: none;
+                    border-color: #3498db;
+                    box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+                }
+                
+                button[type="submit"]:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(52,152,219,0.4);
+                }
+                
+                a[href*="dashboard"]:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(149,165,166,0.4);
+                }
+                
+                @media (max-width: 1200px) {
+                    form {
+                        grid-template-columns: 1fr 1fr !important;
+                    }
+                    form > div:first-child {
+                        grid-column: 1 / -1;
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    form {
+                        grid-template-columns: 1fr !important;
+                    }
+                    form > div {
+                        grid-column: 1 / -1 !important;
+                    }
+                }
+            </style>
         </div>
 
         <div class="loading">
@@ -784,20 +1535,20 @@
             </h2>
             
             {% if metricas %}
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1.8rem;margin-top:2rem;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 380px),1fr));gap:1.8rem;margin-top:2rem;">
                 {% for metrica in metricas %}
-                <div data-metric-card style="background:white;border-radius:18px;padding:1.8rem;box-shadow:0 6px 20px rgba(0,0,0,0.08);border-top:4px solid #3498db;transition:all 0.3s ease;position:relative;overflow:hidden;" 
+                <div data-metric-card style="background:white;border-radius:18px;padding:1.5rem;box-shadow:0 6px 20px rgba(0,0,0,0.08);border-top:4px solid #3498db;transition:all 0.3s ease;position:relative;overflow:hidden;" 
                      onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 12px 35px rgba(0,0,0,0.15)';" 
                      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.08)';">
                     <!-- Borde decorativo superior con gradiente -->
                     <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#3498db,#2ecc71,#f39c12);"></div>
                     
                     <!-- Header de la tarjeta con tipo y categoría -->
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.2rem;">
-                        <div style="flex:1;">
-                            <h3 style="font-size:1.4rem;font-weight:700;color:#2c3e50;margin:0 0 0.5rem 0;display:flex;align-items:center;gap:0.5rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:0.8rem;">
+                        <div style="flex:1;min-width:0;">
+                            <h3 style="font-size:1.3rem;font-weight:700;color:#2c3e50;margin:0 0 0.5rem 0;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
                                 <i class="fas fa-chart-line" style="color:#3498db;"></i>
-                                {{ metrica.nombre }}
+                                <span style="word-break:break-word;">{{ metrica.nombre }}</span>
                             </h3>
                             {% if metrica.categoria %}
                             <span style="display:inline-block;background:linear-gradient(135deg,rgba(52,152,219,0.1),rgba(46,204,113,0.1));color:#2c3e50;padding:0.35rem 0.9rem;border-radius:20px;font-size:0.8rem;font-weight:600;border:1px solid rgba(52,152,219,0.2);">
@@ -805,7 +1556,7 @@
                             </span>
                             {% endif %}
                         </div>
-                        <div style="font-size:0.85rem;color:#95a5a6;text-align:right;white-space:nowrap;margin-left:1rem;">
+                        <div style="font-size:0.85rem;color:#95a5a6;white-space:nowrap;">
                             <i class="fas fa-calendar-alt" style="color:#3498db;"></i>
                             {% if metrica.fecha %}
                                 {{ metrica.fecha.strftime('%d/%m/%Y') }}
@@ -816,14 +1567,14 @@
                     </div>
                     
                     <!-- Valor principal destacado -->
-                    <div style="background:linear-gradient(135deg,rgba(52,152,219,0.08),rgba(46,204,113,0.05));border-radius:15px;padding:1.5rem;margin-bottom:1rem;text-align:center;border:2px solid rgba(52,152,219,0.15);">
-                        <div style="font-size:0.8rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;font-weight:600;">
+                    <div style="background:linear-gradient(135deg,rgba(52,152,219,0.08),rgba(46,204,113,0.05));border-radius:15px;padding:1.2rem;margin-bottom:1rem;text-align:center;border:2px solid rgba(52,152,219,0.15);">
+                        <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem;font-weight:600;">
                             Valor Registrado
                         </div>
-                        <div style="font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#1e3c72,#2a5298);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
+                        <div style="font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,#1e3c72,#2a5298);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;word-break:break-word;">
                             {{ metrica.valor }}
                             {% if metrica.unidad %}
-                            <span style="font-size:1.3rem;font-weight:600;color:#7f8c8d;margin-left:0.3rem;">{{ metrica.unidad }}</span>
+                            <span style="font-size:1.2rem;font-weight:600;color:#7f8c8d;margin-left:0.3rem;">{{ metrica.unidad }}</span>
                             {% endif %}
                         </div>
                     </div>
@@ -873,60 +1624,383 @@
             {% endif %}
         </div>
 
-        <div class="chart-container">
-            <h2 class="chart-title">
-                <i class="fas fa-chart-line"></i> Evolución de Métricas
-            </h2>
-            <canvas id="metricasChart"></canvas>
+        <!-- Separador con más espacio -->
+        <div style="height:4rem;"></div>
+
+        <div style="background:white;border-radius:20px;padding:1.5rem;box-shadow:0 8px 30px rgba(0,0,0,0.1);margin-bottom:3rem;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#3498db,#2ecc71,#f39c12);"></div>
+            
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+                <h2 style="font-size:1.5rem;font-weight:800;color:#2c3e50;margin:0;display:flex;align-items:center;gap:0.6rem;flex:1;min-width:200px;">
+                    <i class="fas fa-chart-line" style="color:#3498db;font-size:1.3rem;"></i>
+                    <span style="word-break:break-word;">Evolución de Métricas</span>
+                </h2>
+                
+                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:flex-end;">
+                    <button onclick="cambiarVistaGrafico('line')" id="btn-line" class="btn-vista active" style="padding:0.5rem 1rem;border-radius:10px;border:2px solid #3498db;background:#3498db;color:white;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:0.4rem;font-size:0.9rem;">
+                        <i class="fas fa-chart-line"></i> <span class="btn-text">Línea</span>
+                    </button>
+                    <button onclick="cambiarVistaGrafico('bar')" id="btn-bar" class="btn-vista" style="padding:0.5rem 1rem;border-radius:10px;border:2px solid #3498db;background:white;color:#3498db;font-weight:600;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:0.4rem;font-size:0.9rem;">
+                        <i class="fas fa-chart-bar"></i> <span class="btn-text">Barras</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtros rápidos -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.6rem;margin-bottom:1.5rem;background:linear-gradient(135deg,rgba(52,152,219,0.05),rgba(46,204,113,0.03));padding:1rem;border-radius:12px;">
+                <button onclick="filtrarPeriodo(7)" class="btn-periodo" style="padding:0.6rem 0.8rem;border-radius:8px;border:2px solid #e0e6ed;background:white;color:#2c3e50;font-weight:600;cursor:pointer;transition:all 0.3s;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.3rem;white-space:nowrap;">
+                    <i class="fas fa-calendar-day"></i> <span class="periodo-text">7 días</span>
+                </button>
+                <button onclick="filtrarPeriodo(30)" class="btn-periodo" style="padding:0.6rem 0.8rem;border-radius:8px;border:2px solid #e0e6ed;background:white;color:#2c3e50;font-weight:600;cursor:pointer;transition:all 0.3s;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.3rem;white-space:nowrap;">
+                    <i class="fas fa-calendar-week"></i> <span class="periodo-text">30 días</span>
+                </button>
+                <button onclick="filtrarPeriodo(90)" class="btn-periodo" style="padding:0.6rem 0.8rem;border-radius:8px;border:2px solid #e0e6ed;background:white;color:#2c3e50;font-weight:600;cursor:pointer;transition:all 0.3s;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.3rem;white-space:nowrap;">
+                    <i class="fas fa-calendar-alt"></i> <span class="periodo-text">3 meses</span>
+                </button>
+                <button onclick="filtrarPeriodo(365)" class="btn-periodo" style="padding:0.6rem 0.8rem;border-radius:8px;border:2px solid #e0e6ed;background:white;color:#2c3e50;font-weight:600;cursor:pointer;transition:all 0.3s;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.3rem;white-space:nowrap;">
+                    <i class="fas fa-calendar"></i> <span class="periodo-text">1 año</span>
+                </button>
+                <button onclick="filtrarPeriodo('all')" class="btn-periodo active-periodo" style="padding:0.6rem 0.8rem;border-radius:8px;border:2px solid #3498db;background:#3498db;color:white;font-weight:600;cursor:pointer;transition:all 0.3s;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:0.3rem;white-space:nowrap;">
+                    <i class="fas fa-infinity"></i> <span class="periodo-text">Todo</span>
+                </button>
+            </div>
+            
+            <!-- Gráfico principal -->
+            <div style="position:relative;background:linear-gradient(135deg,rgba(52,152,219,0.02),rgba(46,204,113,0.01));padding:1.5rem 1rem;border-radius:12px;border:2px solid rgba(52,152,219,0.1);">
+                <canvas id="metricasChart" style="max-height:450px;width:100%;min-height:350px;"></canvas>
+            </div>
+            
+            <!-- Resumen de tendencias -->
+            <div id="tendenciasResumen" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.8rem;margin-top:1.5rem;">
+                <!-- Se llenará dinámicamente con JavaScript -->
+            </div>
         </div>
+
+        <style>
+            .btn-vista:hover, .btn-periodo:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(52,152,219,0.3);
+            }
+            
+            .btn-vista.active {
+                background: #3498db !important;
+                color: white !important;
+            }
+            
+            .btn-periodo.active-periodo {
+                background: #3498db !important;
+                color: white !important;
+                border-color: #3498db !important;
+            }
+        </style>
+
+        <script>
+            let chartInstance = null;
+            let datosOriginales = [];
+            let tipoGraficoActual = 'line';
+            
+            function cambiarVistaGrafico(tipo) {
+                tipoGraficoActual = tipo;
+                document.querySelectorAll('.btn-vista').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.background = 'white';
+                    btn.style.color = '#3498db';
+                });
+                document.getElementById('btn-' + tipo).classList.add('active');
+                document.getElementById('btn-' + tipo).style.background = '#3498db';
+                document.getElementById('btn-' + tipo).style.color = 'white';
+                actualizarGrafico(datosOriginales);
+            }
+            
+            function filtrarPeriodo(dias) {
+                document.querySelectorAll('.btn-periodo').forEach(btn => {
+                    btn.classList.remove('active-periodo');
+                    btn.style.background = 'white';
+                    btn.style.color = '#2c3e50';
+                    btn.style.borderColor = '#e0e6ed';
+                });
+                event.target.classList.add('active-periodo');
+                event.target.style.background = '#3498db';
+                event.target.style.color = 'white';
+                event.target.style.borderColor = '#3498db';
+                
+                if (dias === 'all') {
+                    actualizarGrafico(datosOriginales);
+                    return;
+                }
+                
+                const ahora = new Date();
+                const fechaLimite = new Date(ahora.getTime() - (dias * 24 * 60 * 60 * 1000));
+                
+                const datosFiltrados = datosOriginales.filter(item => {
+                    const fecha = new Date(item.fecha);
+                    return fecha >= fechaLimite;
+                });
+                
+                actualizarGrafico(datosFiltrados);
+            }
+            
+            function actualizarGrafico(datos) {
+                const ctx = document.getElementById('metricasChart').getContext('2d');
+                
+                // Agrupar por tipo de métrica
+                const grupos = {};
+                datos.forEach(item => {
+                    if (!grupos[item.nombre]) grupos[item.nombre] = [];
+                    grupos[item.nombre].push(item);
+                });
+                
+                // Crear datasets
+                const colores = [
+                    { border: '#3498db', bg: 'rgba(52,152,219,0.2)' },
+                    { border: '#2ecc71', bg: 'rgba(46,204,113,0.2)' },
+                    { border: '#f39c12', bg: 'rgba(243,156,18,0.2)' },
+                    { border: '#e74c3c', bg: 'rgba(231,76,60,0.2)' },
+                    { border: '#9b59b6', bg: 'rgba(155,89,182,0.2)' },
+                    { border: '#1abc9c', bg: 'rgba(26,188,156,0.2)' }
+                ];
+                
+                const datasets = Object.keys(grupos).map((nombre, idx) => {
+                    const color = colores[idx % colores.length];
+                    return {
+                        label: nombre,
+                        data: grupos[nombre].map(m => ({ x: m.fecha, y: m.valor })),
+                        borderColor: color.border,
+                        backgroundColor: color.bg,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: tipoGraficoActual === 'line',
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: color.border,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    };
+                });
+                
+                if (chartInstance) chartInstance.destroy();
+                
+                chartInstance = new Chart(ctx, {
+                    type: tipoGraficoActual,
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, weight: 'bold', family: 'Inter' },
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(44,62,80,0.95)',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: true
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: { unit: 'day', displayFormats: { day: 'dd/MM/yyyy' } },
+                                title: {
+                                    display: true,
+                                    text: 'Fecha',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            },
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Valor',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                grid: { color: 'rgba(0,0,0,0.05)' }
+                            }
+                        }
+                    }
+                });
+                
+                // Actualizar resumen de tendencias
+                actualizarResumenTendencias(datos);
+            }
+            
+            function actualizarResumenTendencias(datos) {
+                const grupos = {};
+                datos.forEach(item => {
+                    if (!grupos[item.nombre]) grupos[item.nombre] = [];
+                    grupos[item.nombre].push(item.valor);
+                });
+                
+                let html = '';
+                Object.keys(grupos).forEach(nombre => {
+                    const valores = grupos[nombre];
+                    const promedio = (valores.reduce((a,b) => a+b, 0) / valores.length).toFixed(1);
+                    const ultimo = valores[valores.length - 1].toFixed(1);
+                    const primero = valores[0].toFixed(1);
+                    const cambio = ((ultimo - primero) / primero * 100).toFixed(1);
+                    const icono = cambio > 0 ? '📈' : cambio < 0 ? '📉' : '➡️';
+                    const color = cambio > 0 ? '#2ecc71' : cambio < 0 ? '#e74c3c' : '#95a5a6';
+                    
+                    html += `
+                        <div style="background:linear-gradient(135deg,rgba(52,152,219,0.05),rgba(46,204,113,0.02));padding:1.2rem;border-radius:12px;border-left:4px solid ${color};">
+                            <div style="font-size:0.85rem;color:#7f8c8d;font-weight:600;margin-bottom:0.5rem;">${nombre}</div>
+                            <div style="font-size:1.8rem;font-weight:800;color:#2c3e50;margin-bottom:0.3rem;">${ultimo}</div>
+                            <div style="font-size:0.85rem;color:${color};font-weight:600;">${icono} ${cambio}% (${valores.length} registros)</div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('tendenciasResumen').innerHTML = html;
+            }
+        </script>
 
         <!-- Estadísticas por tipo de métrica -->
         <div style="margin-top:3rem;">
-            <h2 class="chart-title">
+            <h2 class="chart-title" style="font-size:1.5rem;margin-bottom:1.5rem;">
                 <i class="fas fa-chart-bar"></i> Estadísticas por Tipo de Métrica
             </h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:2rem;margin-top:2rem;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 350px),1fr));gap:1.5rem;margin-top:1.5rem;">
             {% for tipo, data in stats.items() %}
-                <div style="background:white;border-radius:20px;padding:2rem;box-shadow:0 8px 25px rgba(0,0,0,0.1);border-left:5px solid #3498db;transition:all 0.3s ease;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-                        <h3 style="font-size:1.5rem;font-weight:700;color:#2c3e50;margin:0;">
-                            <i class="fas fa-tag" style="color:#3498db;margin-right:0.5rem;"></i>{{ tipo }}
+                <div style="background:white;border-radius:18px;padding:1.5rem;box-shadow:0 6px 20px rgba(0,0,0,0.1);border-left:4px solid #3498db;transition:all 0.3s ease;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem;">
+                        <h3 style="font-size:1.3rem;font-weight:700;color:#2c3e50;margin:0;display:flex;align-items:center;gap:0.5rem;word-break:break-word;flex:1;min-width:0;">
+                            <i class="fas fa-tag" style="color:#3498db;"></i>
+                            <span>{{ tipo }}</span>
                         </h3>
-                        <span style="background:linear-gradient(135deg,#3498db,#2ecc71);color:white;padding:0.4rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;">
+                        <span style="background:linear-gradient(135deg,#3498db,#2ecc71);color:white;padding:0.35rem 0.9rem;border-radius:20px;font-size:0.8rem;font-weight:600;white-space:nowrap;">
                             {{ data.unidad }}
                         </span>
                     </div>
                     
-                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
-                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(52,152,219,0.1),rgba(46,204,113,0.05));border-radius:12px;border:2px solid rgba(52,152,219,0.2);">
-                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
-                                <i class="fas fa-chart-line"></i> Actual (Promedio)
+                    <div class="stats-mini-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.8rem;margin-bottom:1.2rem;">
+                        {# Tarjeta de Valor Actual con indicador de salud #}
+                        {% set tipo_lower = tipo.lower().replace(' ', '_') %}
+                        {% set valor_actual_rango = data.actual if data.actual else data.promedio %}
+                        {% set en_rango = false %}
+                        {% set color_salud = '#2c3e50' %}
+                        {% set icono_salud = '' %}
+                        
+                        {% if rangos_saludables %}
+                            {% if 'peso' in tipo.lower() and 'peso' in rangos_saludables %}
+                                {% set rango = rangos_saludables['peso'] %}
+                                {% if valor_actual_rango >= rango.min and valor_actual_rango <= rango.max %}
+                                    {% set en_rango = true %}
+                                    {% set color_salud = '#2ecc71' %}
+                                    {% set icono_salud = '✓' %}
+                                {% elif valor_actual_rango < rango.min or valor_actual_rango > rango.max %}
+                                    {% set color_salud = '#e74c3c' %}
+                                    {% set icono_salud = '!' %}
+                                {% endif %}
+                            {% elif tipo_lower in rangos_saludables %}
+                                {% set rango = rangos_saludables[tipo_lower] %}
+                                {% if valor_actual_rango >= rango.min and valor_actual_rango <= rango.max %}
+                                    {% set en_rango = true %}
+                                    {% set color_salud = '#2ecc71' %}
+                                    {% set icono_salud = '✓' %}
+                                {% elif valor_actual_rango < rango.min or valor_actual_rango > rango.max %}
+                                    {% set color_salud = '#e74c3c' %}
+                                    {% set icono_salud = '!' %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        <div style="text-align:center;padding:0.9rem;background:linear-gradient(135deg,rgba(52,152,219,0.1),rgba(46,204,113,0.05));border-radius:10px;border:2px solid {% if en_rango %}#2ecc71{% elif icono_salud == '!' %}#e74c3c{% else %}rgba(52,152,219,0.2){% endif %};position:relative;">
+                            {% if icono_salud %}
+                            <div style="position:absolute;top:0.4rem;right:0.4rem;width:20px;height:20px;background:{{ color_salud }};color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.75rem;">
+                                {{ icono_salud }}
                             </div>
-                            <div style="font-size:1.8rem;font-weight:800;color:#2c3e50;">{{ data.promedio|round(1) }}</div>
-                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">{{ data.unidad }}</div>
+                            {% endif %}
+                            <div style="font-size:0.65rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-chart-line"></i> Actual
+                            </div>
+                            <div style="font-size:1.4rem;font-weight:800;color:{{ color_salud }};line-height:1.1;word-break:break-word;">{{ valor_actual_rango|round(1) }}</div>
+                            <div style="font-size:0.65rem;color:#95a5a6;margin-top:0.2rem;">
+                                {{ data.unidad }}
+                            </div>
                         </div>
-                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(46,204,113,0.08),rgba(39,174,96,0.05));border-radius:12px;">
-                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
-                                <i class="fas fa-arrow-up"></i> Máximo
+                        <div style="text-align:center;padding:0.9rem;background:linear-gradient(135deg,rgba(46,204,113,0.08),rgba(39,174,96,0.05));border-radius:10px;">
+                            <div style="font-size:0.65rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-arrow-up"></i> Máx
                             </div>
-                            <div style="font-size:1.5rem;font-weight:700;color:#27ae60;">{{ data.maximo|round(1) }}</div>
-                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">Pico más alto</div>
+                            <div style="font-size:1.3rem;font-weight:700;color:#27ae60;line-height:1.1;">{{ data.maximo|round(1) }}</div>
+                            <div style="font-size:0.65rem;color:#95a5a6;margin-top:0.2rem;">Pico</div>
                         </div>
-                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(243,156,18,0.08),rgba(230,126,34,0.05));border-radius:12px;">
-                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
-                                <i class="fas fa-arrow-down"></i> Mínimo
+                        <div style="text-align:center;padding:0.9rem;background:linear-gradient(135deg,rgba(243,156,18,0.08),rgba(230,126,34,0.05));border-radius:10px;">
+                            <div style="font-size:0.65rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-arrow-down"></i> Mín
                             </div>
-                            <div style="font-size:1.5rem;font-weight:700;color:#e67e22;">{{ data.minimo|round(1) }}</div>
-                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">Punto más bajo</div>
+                            <div style="font-size:1.3rem;font-weight:700;color:#e67e22;line-height:1.1;">{{ data.minimo|round(1) }}</div>
+                            <div style="font-size:0.65rem;color:#95a5a6;margin-top:0.2rem;">Bajo</div>
                         </div>
-                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(155,89,182,0.08),rgba(142,68,173,0.05));border-radius:12px;">
-                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
-                                <i class="fas fa-database"></i> Registros
+                        <div style="text-align:center;padding:0.9rem;background:linear-gradient(135deg,rgba(155,89,182,0.08),rgba(142,68,173,0.05));border-radius:10px;">
+                            <div style="font-size:0.65rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-database"></i> Total
                             </div>
-                            <div style="font-size:1.5rem;font-weight:700;color:#8e44ad;">{{ data.valores|length }}</div>
-                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">Total mediciones</div>
+                            <div style="font-size:1.3rem;font-weight:700;color:#8e44ad;line-height:1.1;">{{ data.valores|length }}</div>
+                            <div style="font-size:0.65rem;color:#95a5a6;margin-top:0.2rem;">Registros</div>
                         </div>
                     </div>
+                    
+                    {% if rangos_saludables %}
+                    {# Mostrar rangos saludables recomendados si existen #}
+                    {% set tipo_lower = tipo.lower().replace(' ', '_') %}
+                    {% if tipo_lower in rangos_saludables or 'peso' in tipo.lower() and 'peso' in rangos_saludables %}
+                        {% if 'peso' in tipo.lower() %}
+                            {% set rango = rangos_saludables['peso'] %}
+                        {% else %}
+                            {% set rango = rangos_saludables.get(tipo_lower) %}
+                        {% endif %}
+                        
+                        {% if rango %}
+                        <div style="background:linear-gradient(135deg,rgba(46,204,113,0.08),rgba(52,152,219,0.05));border-left:4px solid #2ecc71;padding:1rem;border-radius:12px;margin-bottom:1rem;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                                <i class="fas fa-heartbeat" style="color:#2ecc71;font-size:1.2rem;"></i>
+                                <span style="font-weight:700;color:#2c3e50;font-size:0.95rem;">Rango Saludable Recomendado</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                                <div style="text-align:center;">
+                                    <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;">Mínimo</div>
+                                    <div style="font-size:1.3rem;font-weight:700;color:#e67e22;">{{ rango.min }}</div>
+                                </div>
+                                <div style="text-align:center;flex:1;">
+                                    <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;">Ideal</div>
+                                    <div style="font-size:1.6rem;font-weight:800;color:#2ecc71;">{{ rango.ideal }}</div>
+                                </div>
+                                <div style="text-align:center;">
+                                    <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;">Máximo</div>
+                                    <div style="font-size:1.3rem;font-weight:700;color:#e67e22;">{{ rango.max }}</div>
+                                </div>
+                                <div style="flex-basis:100%;text-align:center;font-size:0.85rem;color:#95a5a6;font-style:italic;margin-top:0.3rem;">
+                                    {{ rango.unidad }} - {{ rango.descripcion }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    {% elif not perfil %}
+                    {# Mensaje si no tiene perfil configurado #}
+                    <div style="background:linear-gradient(135deg,rgba(243,156,18,0.08),rgba(230,126,34,0.05));border-left:4px solid #f39c12;padding:1rem;border-radius:12px;margin-bottom:1rem;">
+                        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+                            <i class="fas fa-info-circle" style="color:#f39c12;font-size:1.1rem;"></i>
+                            <span style="font-weight:600;color:#2c3e50;font-size:0.9rem;">Completa tu perfil para recomendaciones personalizadas</span>
+                        </div>
+                        <div style="font-size:0.85rem;color:#7f8c8d;margin-bottom:0.5rem;">
+                            Ingresa tu edad, altura y nivel de actividad para obtener rangos saludables específicos.
+                        </div>
+                        <a href="{{ url_for('main.perfil') }}" style="display:inline-block;background:#f39c12;color:white;padding:0.5rem 1rem;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600;transition:all 0.3s;">
+                            <i class="fas fa-user-circle"></i> Ir a Mi Perfil
+                        </a>
+                    </div>
+                    {% endif %}
                     
                     <div style="background:rgba(52,152,219,0.03);padding:1.2rem;border-radius:12px;margin-bottom:1rem;">
                         <div style="font-size:0.9rem;color:#7f8c8d;margin-bottom:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
@@ -1161,191 +2235,24 @@
         const metricasData = JSON.parse(document.getElementById('metricasData').textContent) || [];
         const filteredMetricasData = metricasData.filter(m => m.fecha && m.valor !== null);
         
-        // Actualizar estadísticas
-        const today = new Date().toISOString().split('T')[0];
-        const todayMetrics = filteredMetricasData.filter(m => m.fecha.startsWith(today)).length;
-        const categories = [...new Set(filteredMetricasData.map(m => m.categoria).filter(c => c))];
+        // Guardar datos originales para filtros
+        datosOriginales = filteredMetricasData;
         
-        // document.getElementById('todayMetrics').textContent = todayMetrics;
-
-        // Configuración de colores profesionales
-        const colors = [
-            '#3498db', '#e74c3c', '#2ecc71', '#f39c12', 
-            '#34495e', '#16a085', '#27ae60', '#2980b9',
-            '#8e44ad', '#d35400', '#c0392b', '#7f8c8d'
-        ];
-
-        // Generar gráfica si hay datos
+        // Inicializar gráfico
         if (filteredMetricasData.length > 0) {
-            const tipos = [...new Set(filteredMetricasData.map(m => m.nombre))];
-            const datasets = tipos.map((tipo, index) => {
-                const datosTipo = filteredMetricasData
-                    .filter(m => m.nombre === tipo)
-                    .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-                // Gradiente para el fondo bajo la línea
-                const ctx = document.getElementById('metricasChart').getContext('2d');
-                let gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                gradient.addColorStop(0, colors[index % colors.length] + 'BB');
-                gradient.addColorStop(1, 'rgba(255,255,255,0)');
-                return {
-                    label: tipo,
-                    data: datosTipo.map(m => ({x: m.fecha, y: parseFloat(m.valor)})),
-                    borderColor: colors[index % colors.length],
-                    backgroundColor: gradient,
-                    fill: true,
-                    tension: 0.5,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: colors[index % colors.length],
-                    pointBorderWidth: 3,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    borderWidth: 3,
-                    shadowOffsetX: 2,
-                    shadowOffsetY: 2,
-                    shadowBlur: 8,
-                    shadowColor: colors[index % colors.length]
-                };
-            });
-
-            const ctx = document.getElementById('metricasChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: { datasets: datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                pointStyle: 'circle',
-                                padding: 20,
-                                font: { size: 14, weight: '600', family: 'Inter, sans-serif' },
-                                color: '#2c3e50',
-                                boxWidth: 12,
-                                boxHeight: 12
-                            }
-                        },
-                        title: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(44,62,80,0.97)',
-                            titleColor: '#ffffff',
-                            bodyColor: '#ffffff',
-                            borderColor: '#3498db',
-                            borderWidth: 2,
-                            cornerRadius: 12,
-                            displayColors: true,
-                            padding: 16,
-                            caretSize: 10,
-                            boxPadding: 10,
-                            titleFont: { size: 15, weight: '700', family: 'Inter, sans-serif' },
-                            bodyFont: { size: 14, weight: '500', family: 'Inter, sans-serif' },
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += context.parsed.y.toFixed(2);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: { 
-                                unit: 'day', 
-                                tooltipFormat: 'dd/MM/yyyy',
-                                displayFormats: { day: 'dd/MM' }
-                            },
-                            title: { 
-                                display: true, 
-                                text: '📅 Fecha',
-                                font: { size: 15, weight: '700', family: 'Inter, sans-serif' },
-                                color: '#2c3e50',
-                                padding: { top: 10 }
-                            },
-                            grid: { 
-                                color: 'rgba(52,152,219,0.1)',
-                                lineWidth: 1.5,
-                                drawBorder: true,
-                                borderColor: '#e0e6ed',
-                                borderWidth: 2
-                            },
-                            ticks: { 
-                                color: '#34495e', 
-                                font: { size: 13, weight: '500', family: 'Inter, sans-serif' },
-                                padding: 8
-                            }
-                        },
-                        y: {
-                            title: { 
-                                display: true, 
-                                text: '📊 Valor',
-                                font: { size: 15, weight: '700', family: 'Inter, sans-serif' },
-                                color: '#2c3e50',
-                                padding: { bottom: 10 }
-                            },
-                            grid: { 
-                                color: 'rgba(52,152,219,0.1)',
-                                lineWidth: 1.5,
-                                drawBorder: true,
-                                borderColor: '#e0e6ed',
-                                borderWidth: 2
-                            },
-                            beginAtZero: false,
-                            ticks: { 
-                                color: '#34495e', 
-                                font: { size: 13, weight: '500', family: 'Inter, sans-serif' },
-                                padding: 8,
-                                callback: function(value) {
-                                    return value.toFixed(1);
-                                }
-                            }
-                        }
-                    },
-                    elements: {
-                        point: {
-                            radius: 5,
-                            hoverRadius: 8,
-                            hoverBorderWidth: 3,
-                            borderWidth: 2,
-                            backgroundColor: '#ffffff'
-                        },
-                        line: {
-                            borderWidth: 3.5,
-                            tension: 0.4
-                        }
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    hover: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    animation: {
-                        duration: 1500,
-                        easing: 'easeInOutQuart'
-                    }
-                }
-            });
+            actualizarGrafico(filteredMetricasData);
         } else {
-            document.querySelector('.chart-container').innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">📈</div>
-                    <h3>No hay datos para mostrar en la gráfica</h3>
-                    <p>Agrega algunas métricas para ver su evolución</p>
+            document.getElementById('metricasChart').parentElement.innerHTML = `
+                <div style="text-align:center;padding:4rem;color:#bdc3c7;">
+                    <i class="fas fa-chart-line" style="font-size:5rem;opacity:0.2;margin-bottom:1rem;"></i>
+                    <h3 style="color:#7f8c8d;font-size:1.5rem;margin:0;">No hay datos para mostrar</h3>
+                    <p style="color:#95a5a6;margin-top:0.5rem;">Agrega métricas para visualizar tu progreso</p>
                 </div>
             `;
         }
+    </script>
 
+    <script>
         // Efectos de animación suaves
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.stat-card');
@@ -1374,6 +2281,7 @@
             });
         });
     </script>
+    
     <script>
     // Guía rápida y modal de bienvenida
     function showWelcome(force=false) {
