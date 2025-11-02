@@ -3,22 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Seguimiento Personal{% endblock %}</title>
+    <title>{% block title %}SaludPlus - Seguimiento Personal{% endblock %}</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #222; min-height: 100vh; margin: 0; }
-        .container { max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 2rem; }
-        header { text-align: center; margin-bottom: 2rem; }
-        header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-        header p { color: #666; font-size: 1rem; }
-        .flash { margin-bottom: 1rem; padding: 1rem; border-radius: 8px; text-align: center; }
-        .flash.success { background: #e6f9ec; color: #218838; border: 1px solid #b7ebc2; }
-        .flash.danger { background: #fdecea; color: #c82333; border: 1px solid #f5c6cb; }
-        .flash.info { background: #e7f3fe; color: #0c5460; border: 1px solid #bee5eb; }
-        a { color: #2563eb; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #2c3e50; 
+            min-height: 100vh; 
+            padding: 1rem;
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 20px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12);
+        }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p { 
+            color: #7f8c8d; 
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .flash { 
+            margin-bottom: 1.5rem; 
+            padding: 1.2rem; 
+            border-radius: 12px; 
+            text-align: center;
+            font-weight: 500;
+            animation: slideIn 0.4s ease-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flash.success { 
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .flash.danger { 
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .flash.info { 
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        a { 
+            color: #3498db; 
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover { 
+            color: #2980b9;
+            transform: translateX(2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #7f8c8d;
+            padding: 0.9rem 1.8rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: #ecf0f1;
+            border-color: #bdc3c7;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 0.5rem;
+                border-radius: 16px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+        }
     </style>
     {% block styles %}{% endblock %}
     {% block extra_head %}{% endblock %}
@@ -26,13 +174,15 @@
 <body>
     <div class="container">
         <header>
-            <h1>{% block header_title %}Seguimiento Personal{% endblock %}</h1>
+            <h1>{% block header_title %}SaludPlus{% endblock %}</h1>
             <p>{% block header_subtitle %}Gestiona y monitorea tu progreso{% endblock %}</p>
         </header>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
+                    <div class="flash {{ category }}">
+                        {% if category == 'success' %}✅{% elif category == 'danger' %}❌{% else %}ℹ️{% endif %} {{ message }}
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}

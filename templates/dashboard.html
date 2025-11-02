@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Métricas</title>
+    <title>Dashboard - SaludPlus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,120 +14,109 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            padding: 1rem;
-        }
-        /* Alto contraste */
-        body.high-contrast, .high-contrast .dashboard-container, .high-contrast .stat-card, .high-contrast .chart-container, .high-contrast .table-container, .high-contrast .filters-section {
-            background: #000 !important;
-            color: #fff !important;
-        }
-        .high-contrast .stat-card, .high-contrast .chart-container, .high-contrast .table-container, .high-contrast .filters-section {
-            border: 2px solid #fff !important;
-        }
-        .high-contrast th, .high-contrast td {
-            background: #000 !important;
-            color: #fff !important;
-        }
-        .high-contrast .btn-primary, .high-contrast .btn-filter {
-            background: #fff !important;
-            color: #000 !important;
-            border: 2px solid #fff !important;
-        }
-        .high-contrast .btn-primary:hover, .high-contrast .btn-filter:hover {
-            background: #ffd700 !important;
-            color: #000 !important;
-        }
-        /* Foco visible */
-        :focus {
-            outline: 3px solid #ffd700 !important;
-            outline-offset: 2px;
-        }
-        /* Botones de tamaño de fuente */
-        html.font-large {
-            font-size: 120%;
-        }
-        html.font-xlarge {
-            font-size: 140%;
-        }
-        html.font-small {
-            font-size: 90%;
-        }
-        html.font-xsmall {
-            font-size: 80%;
+            padding: 1.5rem;
         }
 
         .dashboard-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12);
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .header-left {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            align-items: flex-end;
         }
 
         .welcome-text {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 0.3rem;
             font-weight: 500;
         }
 
         .main-title {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1.2;
         }
 
         .subtitle {
             color: #7f8c8d;
-            font-size: 1rem;
+            font-size: 1.05rem;
         }
 
         .actions-bar {
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: nowrap;
-            gap: 2rem;
-            overflow-x: auto;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.85rem 1.6rem;
             border: none;
             border-radius: 12px;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            white-space: nowrap;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.5);
         }
 
         .btn-logout {
@@ -135,6 +126,11 @@
 
         .btn-logout:hover {
             box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
         }
 
         .flash {
@@ -149,12 +145,12 @@
         }
 
         .filters-section {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 204, 113, 0.05));
+            padding: 1.8rem;
             border-radius: 16px;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(52, 152, 219, 0.1);
         }
 
         .filters-form {
@@ -221,8 +217,8 @@
             background: white;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2.5rem;
         }
 
         table {
@@ -231,177 +227,258 @@
         }
 
         th {
-            background: linear-gradient(135deg, #34495e, #2c3e50);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
             color: white;
-            padding: 1rem;
+            padding: 1.3rem 1.2rem;
             text-align: left;
-            font-weight: 600;
-            font-size: 0.95rem;
+            font-weight: 700;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
+            border-bottom: 3px solid #1e2a38;
         }
 
         td {
-            padding: 1rem;
-            border-bottom: 1px solid #ecf0f1;
+            padding: 1.3rem 1.2rem;
+            border-bottom: 1px solid #e8eef3;
             vertical-align: middle;
+            font-size: 0.95rem;
+            color: #2c3e50;
+        }
+
+        td strong {
+            color: #1e3c72;
+            font-weight: 600;
         }
 
         tr:nth-child(even) {
-            background: rgba(52, 152, 219, 0.02);
+            background: rgba(52, 152, 219, 0.03);
         }
 
         tr:hover {
-            background: rgba(52, 152, 219, 0.05);
-            transform: scale(1.001);
-            transition: all 0.2s ease;
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.08), rgba(46, 204, 113, 0.05));
+            transition: all 0.3s ease;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
         }
 
         .btn-edit {
             background: linear-gradient(135deg, #f39c12, #e67e22);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.65rem 1.2rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-right: 0.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.2);
         }
 
         .btn-edit:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
         }
 
         .btn-delete {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.65rem 1.2rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
         }
 
         .btn-delete:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
         }
 
         .chart-container {
             background: white;
-            border-radius: 16px;
-            padding: 1.5rem;
+            border-radius: 20px;
+            padding: 2.5rem;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-            height: 350px;
+            margin-top: 2.5rem;
+            min-height: 450px;
             display: flex;
             flex-direction: column;
+            border: 1px solid rgba(52, 152, 219, 0.1);
         }
 
         #metricasChart {
             flex: 1;
-            min-height: 250px;
-            max-height: 300px;
+            min-height: 350px;
+            max-height: 450px;
             width: 100% !important;
         }
 
         .chart-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .chart-title i {
+            color: #3498db;
+            font-size: 1.6rem;
         }
 
         .empty-state {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem 2rem;
             color: #7f8c8d;
         }
 
         .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
             color: #bdc3c7;
+            opacity: 0.4;
+        }
+
+        .empty-state h3 {
+            font-size: 1.4rem;
+            color: #34495e;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            color: #95a5a6;
         }
 
         .stats-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
         }
 
         .stat-card {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: left;
             transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #3498db, #2ecc71);
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: #3498db;
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
         }
 
         .stat-card h3 {
             color: #7f8c8d;
             font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .stat-card .stat-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1;
         }
 
         @media (max-width: 1024px) {
             .dashboard-container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
             .stats-cards {
                 grid-template-columns: 1fr 1fr;
             }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-right {
+                align-items: flex-start;
+                width: 100%;
+            }
+            .main-title {
+                font-size: 2.2rem;
+            }
         }
         @media (max-width: 800px) {
             .dashboard-container {
-                padding: 0.3rem;
-                margin: 0.1rem;
-                border-radius: 10px;
+                padding: 1rem;
+                margin: 0.5rem;
+                border-radius: 16px;
             }
             .main-title {
-                font-size: 1.2rem;
+                font-size: 1.8rem;
             }
             .actions-bar {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 0.7rem;
+                gap: 0.8rem;
             }
             .btn-primary, .actions-bar label.btn-primary {
                 width: 100%;
                 justify-content: center;
-                font-size: 0.98rem;
-                padding: 0.7rem 0.5rem;
+                font-size: 0.95rem;
+                padding: 0.8rem 1rem;
             }
             .filters-form {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 0.3rem;
+                gap: 0.8rem;
             }
             .filter-group {
                 justify-content: flex-start;
@@ -411,68 +488,57 @@
             }
             table {
                 min-width: 520px;
-                font-size: 0.91rem;
+                font-size: 0.9rem;
             }
             th, td {
-                padding: 0.25rem 0.2rem;
+                padding: 0.8rem 0.5rem;
                 word-break: break-word;
             }
             .stats-cards {
                 grid-template-columns: 1fr;
             }
             .stat-card {
-                padding: 0.7rem;
+                padding: 1.5rem;
             }
             .chart-container {
-                height: auto;
-                padding: 0.3rem;
+                padding: 1rem;
+                min-height: 300px;
             }
             #metricasChart {
-                min-height: 120px;
-            }
-            .header > div {
-                flex-direction: column;
-                align-items: flex-start;
+                min-height: 200px;
             }
             .filters-section {
-                padding: 0.7rem;
+                padding: 1rem;
             }
-            /* Estadísticas responsive */
             .chart-title {
-                font-size: 1.1rem;
-            }
-            .table-container table {
-                font-size: 0.91rem;
+                font-size: 1.3rem;
             }
         }
         @media (max-width: 480px) {
             .dashboard-container {
-                padding: 0.1rem;
+                padding: 0.8rem;
             }
             .main-title {
-                font-size: 0.95rem;
+                font-size: 1.5rem;
             }
             .stat-card .stat-value {
-                font-size: 1rem;
+                font-size: 2rem;
             }
             .btn-primary, .actions-bar label.btn-primary {
-                font-size: 0.93rem;
-                padding: 0.4rem 0.4rem;
+                font-size: 0.9rem;
+                padding: 0.7rem 0.8rem;
             }
             th, td {
-                font-size: 0.8rem;
-                padding: 0.13rem 0.1rem;
+                font-size: 0.85rem;
+                padding: 0.6rem 0.3rem;
             }
             .filters-section {
-                padding: 0.3rem;
-            }
-            .table-container table {
-                font-size: 0.8rem;
+                padding: 0.8rem;
             }
             .table-container td form input,
             .table-container td form button {
-                font-size: 0.8rem !important;
-                padding: 0.2rem 0.2rem !important;
+                font-size: 0.85rem !important;
+                padding: 0.4rem !important;
             }
         }
 
@@ -564,31 +630,25 @@
     </div>
     <div class="dashboard-container" role="main" aria-label="Panel principal de métricas">
         <div class="header">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div>
-                    <p class="welcome-text">Bienvenido(a), <strong>{{ current_user.username }}</strong></p>
-                    <h1 class="main-title">Tablero de Bienestar</h1>
-                    <p class="subtitle">Gestiona y visualiza tus métricas de forma eficiente</p>
-                </div>
-                <div style="text-align:right;">
-                    <button id="toggleDark" class="btn-primary" style="margin-bottom:0.5rem;" title="Cambia entre modo claro y oscuro">🌙/☀️</button>
-                    <button id="toggleContrast" class="btn-primary" style="margin-bottom:0.5rem;" title="Alto contraste">🌓 Contraste</button>
-                    <form id="logoutForm" action="{{ url_for('main.logout') }}" method="get" style="display:inline; margin-left:0.5rem;">
-                    <button type="submit" class="btn-primary btn-logout" style="margin-bottom:0.5rem;">🚪 Cerrar Sesión</button>
+            <div class="header-left">
+                <p class="welcome-text">Bienvenido(a), <strong>{{ current_user.username }}</strong></p>
+                <h1 class="main-title">📊 Dashboard</h1>
+                <p class="subtitle">Gestiona y visualiza tus métricas de forma eficiente</p>
+            </div>
+            <div class="header-right">
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <a href="{{ url_for('main.perfil') }}" class="btn-primary btn-small" title="Gestionar mi perfil" style="text-decoration:none;">
+                        <i class="fas fa-user-circle"></i> Mi Perfil
+                    </a>
+                    <button id="showGuide" class="btn-primary btn-small" title="Ver guía rápida de uso">❓ Ayuda</button>
+                    <form id="logoutForm" action="{{ url_for('main.logout') }}" method="get" style="display:inline;">
+                        <button type="submit" class="btn-primary btn-logout btn-small">🚪 Salir</button>
                     </form>
                     <script>
                     document.getElementById('logoutForm').addEventListener('submit', function() {
-                    localStorage.removeItem('welcomeSeen');
+                        localStorage.removeItem('welcomeSeen');
                     });
                     </script>
-                    <br>
-                    <label style="font-size:0.9rem;">Color principal:
-                        <input type="color" id="themeColor" value="#3498db" style="width:32px;height:32px;border:none;vertical-align:middle;" title="Personaliza el color principal">
-                    </label>
-                    <br>
-                    <button id="increaseFont" class="btn-primary" style="font-size:0.95rem;">A+</button>
-                    <button id="decreaseFont" class="btn-primary" style="font-size:0.95rem;">A-</button>
-                    <button id="showGuide" class="btn-primary" style="margin-top:0.5rem;font-size:0.95rem;" title="Ver guía rápida de uso">¿Cómo funciona?</button>
                 </div>
             </div>
         </div>
@@ -596,20 +656,40 @@
         <!-- Stats Cards -->
         <div class="stats-cards">
             <div class="stat-card">
-                <h3>Total Métricas</h3>
-                <div class="stat-value" id="totalMetrics">{{ metricas|length }}</div>
+                <div class="stat-card-header">
+                    <div>
+                        <h3>📊 Total Métricas</h3>
+                        <div class="stat-value" id="totalMetrics">{{ metricas|length }}</div>
+                    </div>
+                    <div class="stat-icon">📈</div>
+                </div>
             </div>
             <div class="stat-card">
-            <h3>Métricas Hoy</h3>
-            <div class="stat-value" id="todayMetrics">{{ metricas_hoy }}</div>
+                <div class="stat-card-header">
+                    <div>
+                        <h3>📅 Métricas Hoy</h3>
+                        <div class="stat-value" id="todayMetrics">{{ metricas_hoy }}</div>
+                    </div>
+                    <div class="stat-icon">🗓️</div>
+                </div>
             </div>
             <div class="stat-card">
-                <h3>Categorías</h3>
-                <div class="stat-value" id="totalCategories">{{ total_categorias }}</div>
+                <div class="stat-card-header">
+                    <div>
+                        <h3>🏷️ Categorías</h3>
+                        <div class="stat-value" id="totalCategories">{{ total_categorias }}</div>
+                    </div>
+                    <div class="stat-icon">📁</div>
+                </div>
             </div>
             <div class="stat-card">
-                <h3>Última Actualización</h3>
-                <div class="stat-value" id="lastUpdate" style="font-size: 1rem;">Hoy</div>
+                <div class="stat-card-header">
+                    <div>
+                        <h3>🕐 Última Actualización</h3>
+                        <div class="stat-value" id="lastUpdate" style="font-size: 1.3rem;">Hoy</div>
+                    </div>
+                    <div class="stat-icon">⏰</div>
+                </div>
             </div>
         </div>
         <!-- Calendario de métricas -->
@@ -623,20 +703,24 @@
 
         <div class="actions-bar">
             <a href="{{ url_for('main.agregar_metrica') }}" class="btn-primary">
-                ➕ Agregar Métrica
+                <i class="fas fa-plus-circle"></i> Agregar Métrica
             </a>
             <a href="{{ url_for('main.categories') }}" class="btn-primary">
-                🗂️ Gestionar Categorías
+                <i class="fas fa-folder-open"></i> Categorías
             </a>
-            <a href="{{ url_for('main.exportar_metricas', formato='csv') }}" class="btn-primary" title="Exportar métricas a CSV">⬇️ Exportar CSV</a>
-            <a href="{{ url_for('main.exportar_metricas', formato='excel') }}" class="btn-primary" title="Exportar métricas a Excel">⬇️ Exportar Excel</a>
+            <a href="{{ url_for('main.exportar_metricas', formato='csv') }}" class="btn-primary" title="Exportar métricas a CSV">
+                <i class="fas fa-file-csv"></i> CSV
+            </a>
+            <a href="{{ url_for('main.exportar_metricas', formato='excel') }}" class="btn-primary" title="Exportar métricas a Excel">
+                <i class="fas fa-file-excel"></i> Excel
+            </a>
             <form action="{{ url_for('main.importar_metricas') }}" method="post" enctype="multipart/form-data" style="display:inline;">
-                <label class="btn-primary" style="margin-bottom:0;cursor:pointer;">
-                    ⬆️ Importar
+                <label class="btn-primary" style="margin:0;cursor:pointer;">
+                    <i class="fas fa-file-upload"></i> Importar
                     <input type="file" name="archivo" accept=".csv,.xlsx" style="display:none;" onchange="this.form.submit()">
                 </label>
             </form>
-                    </div>
+        </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
@@ -694,119 +778,305 @@
             <p>Cargando métricas...</p>
         </div>
 
-                <div class="table-container">
-            <table id="metricasTable">
-                <thead>
-                    <tr>
-                        <th>📊 Tipo</th>
-                        <th>🔢 Valor</th>
-                        <th>📏 Unidad</th>
-                        <th>🏷️ Categoría</th>
-                        <th>📝 Nota</th>
-                        <th>📅 Fecha</th>
-                        <th>⚙️ Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for metrica in metricas %}
-                    <tr>
-                        <td><strong>{{ metrica.nombre }}</strong></td>
-                        <td>{{ metrica.valor }}</td>
-                        <td>{{ metrica.unidad or '-' }}</td>
-                        <td>{{ metrica.categoria.nombre if metrica.categoria else '-' }}</td>
-                        <td>{{ metrica.nota or '-' }}</td>
-                        <td>
-                          {% if metrica.fecha %}
-                            {{ metrica.fecha.strftime('%d/%m/%Y') }}
-                          {% else %}
-                            Sin fecha
-                          {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ url_for('main.editar_metrica', id=metrica.id) }}" class="btn-edit">
-                                ✏️ Editar
-                            </a>
-                            <form action="{{ url_for('main.eliminar_metrica', id=metrica.id) }}" method="post" style="display:inline;">
-                                <button type="submit" class="btn-delete" 
-                                        onclick="return confirm('¿Seguro que deseas eliminar esta métrica?');">
-                                    🗑️ Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <div class="empty-state-icon">📊</div>
-                            <h3>No hay métricas registradas</h3>
-                            <p>Comienza agregando tu primera métrica</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div style="margin-top:2.5rem;">
+            <h2 class="chart-title">
+                <i class="fas fa-database"></i> Registro de Métricas
+            </h2>
+            
+            {% if metricas %}
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:1.8rem;margin-top:2rem;">
+                {% for metrica in metricas %}
+                <div data-metric-card style="background:white;border-radius:18px;padding:1.8rem;box-shadow:0 6px 20px rgba(0,0,0,0.08);border-top:4px solid #3498db;transition:all 0.3s ease;position:relative;overflow:hidden;" 
+                     onmouseover="this.style.transform='translateY(-8px)';this.style.boxShadow='0 12px 35px rgba(0,0,0,0.15)';" 
+                     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.08)';">
+                    <!-- Borde decorativo superior con gradiente -->
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#3498db,#2ecc71,#f39c12);"></div>
+                    
+                    <!-- Header de la tarjeta con tipo y categoría -->
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.2rem;">
+                        <div style="flex:1;">
+                            <h3 style="font-size:1.4rem;font-weight:700;color:#2c3e50;margin:0 0 0.5rem 0;display:flex;align-items:center;gap:0.5rem;">
+                                <i class="fas fa-chart-line" style="color:#3498db;"></i>
+                                {{ metrica.nombre }}
+                            </h3>
+                            {% if metrica.categoria %}
+                            <span style="display:inline-block;background:linear-gradient(135deg,rgba(52,152,219,0.1),rgba(46,204,113,0.1));color:#2c3e50;padding:0.35rem 0.9rem;border-radius:20px;font-size:0.8rem;font-weight:600;border:1px solid rgba(52,152,219,0.2);">
+                                <i class="fas fa-folder" style="font-size:0.75rem;"></i> {{ metrica.categoria.nombre }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div style="font-size:0.85rem;color:#95a5a6;text-align:right;white-space:nowrap;margin-left:1rem;">
+                            <i class="fas fa-calendar-alt" style="color:#3498db;"></i>
+                            {% if metrica.fecha %}
+                                {{ metrica.fecha.strftime('%d/%m/%Y') }}
+                            {% else %}
+                                Sin fecha
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Valor principal destacado -->
+                    <div style="background:linear-gradient(135deg,rgba(52,152,219,0.08),rgba(46,204,113,0.05));border-radius:15px;padding:1.5rem;margin-bottom:1rem;text-align:center;border:2px solid rgba(52,152,219,0.15);">
+                        <div style="font-size:0.8rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;font-weight:600;">
+                            Valor Registrado
+                        </div>
+                        <div style="font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#1e3c72,#2a5298);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
+                            {{ metrica.valor }}
+                            {% if metrica.unidad %}
+                            <span style="font-size:1.3rem;font-weight:600;color:#7f8c8d;margin-left:0.3rem;">{{ metrica.unidad }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Nota (si existe) -->
+                    {% if metrica.nota %}
+                    <div style="background:rgba(243,156,18,0.05);border-left:3px solid #f39c12;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+                        <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;font-weight:600;">
+                            <i class="fas fa-sticky-note"></i> Nota
+                        </div>
+                        <div style="font-size:0.9rem;color:#34495e;line-height:1.5;">
+                            {{ metrica.nota }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Botones de acción -->
+                    <div style="display:flex;gap:0.8rem;justify-content:stretch;">
+                        <a href="{{ url_for('main.editar_metrica', id=metrica.id) }}" 
+                           style="flex:1;display:flex;align-items:center;justify-content:center;gap:0.5rem;background:linear-gradient(135deg,#f39c12,#e67e22);color:white;padding:0.8rem 1.2rem;border:none;border-radius:12px;text-decoration:none;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s ease;box-shadow:0 3px 10px rgba(243,156,18,0.25);"
+                           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(243,156,18,0.4)';"
+                           onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(243,156,18,0.25)';">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <form action="{{ url_for('main.eliminar_metrica', id=metrica.id) }}" method="post" style="flex:1;">
+                            <button type="submit" 
+                                    onclick="return confirm('¿Seguro que deseas eliminar esta métrica?');"
+                                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:0.5rem;background:linear-gradient(135deg,#e74c3c,#c0392b);color:white;padding:0.8rem 1.2rem;border:none;border-radius:12px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s ease;box-shadow:0 3px 10px rgba(231,76,60,0.25);"
+                                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(231,76,60,0.4)';"
+                                    onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(231,76,60,0.25)';">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="background:white;border-radius:20px;padding:4rem 2rem;box-shadow:0 6px 20px rgba(0,0,0,0.08);text-align:center;margin-top:2rem;">
+                <div style="font-size:5rem;margin-bottom:1.5rem;opacity:0.2;">📊</div>
+                <h3 style="font-size:1.6rem;color:#34495e;margin-bottom:0.8rem;font-weight:700;">No hay métricas registradas</h3>
+                <p style="font-size:1.1rem;color:#95a5a6;margin-bottom:2rem;">Comienza agregando tu primera métrica para empezar a trackear tu salud</p>
+                <a href="{{ url_for('main.agregar_metrica') }}" style="display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#2c3e50,#34495e);color:white;padding:1rem 2rem;border-radius:12px;text-decoration:none;font-weight:600;font-size:1.05rem;box-shadow:0 4px 15px rgba(44,62,80,0.3);transition:all 0.3s ease;">
+                    <i class="fas fa-plus-circle"></i> Agregar Primera Métrica
+                </a>
+            </div>
+            {% endif %}
         </div>
 
-        
         <div class="chart-container">
-            <h2 class="chart-title">📈 Evolución de Métricas</h2>
+            <h2 class="chart-title">
+                <i class="fas fa-chart-line"></i> Evolución de Métricas
+            </h2>
             <canvas id="metricasChart"></canvas>
         </div>
 
         <!-- Estadísticas por tipo de métrica -->
-        <div style="margin-top:2rem;">
-            <h2 class="chart-title">📊 Estadísticas por Tipo de Métrica</h2>
-            <table style="width:100%;background:white;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.07);margin-bottom:2rem;">
-                <thead>
-                    <tr style="background:linear-gradient(135deg,#34495e,#2c3e50);color:white;">
-                        <th style="padding:0.7rem;">Tipo</th>
-                        <th style="padding:0.7rem;">Promedio</th>
-                        <th style="padding:0.7rem;">Máximo</th>
-                        <th style="padding:0.7rem;">Mínimo</th>
-                        <th style="padding:0.7rem;">Unidad</th>
-                        <th style="padding:0.7rem;">Objetivo</th>
-                        <th style="padding:0.7rem;">Progreso</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tipo, data in stats.items() %}
-                    <tr>
-                        <td style="padding:0.7rem;font-weight:bold;">{{ tipo }}</td>
-                        <td style="padding:0.7rem;">{{ data.promedio }}</td>
-                        <td style="padding:0.7rem;">{{ data.maximo }}</td>
-                        <td style="padding:0.7rem;">{{ data.minimo }}</td>
-                        <td style="padding:0.7rem;">{{ data.unidad }}</td>
-                        <td style="padding:0.7rem;">
-                            <form method="post" style="display:flex;gap:0.3rem;align-items:center;">
-                                <input type="hidden" name="objetivo_metrica" value="{{ tipo }}">
-                                <input type="number" step="any" name="valor_objetivo" value="{{ objetivos[tipo].valor_objetivo if objetivos[tipo] else '' }}" placeholder="Meta" style="width:70px;padding:0.3rem 0.4rem;border-radius:6px;border:1px solid #ccc;">
-                                <input type="text" name="unidad_objetivo" value="{{ objetivos[tipo].unidad if objetivos[tipo] else data.unidad }}" placeholder="Unidad" style="width:50px;padding:0.3rem 0.4rem;border-radius:6px;border:1px solid #ccc;">
-                                <button type="submit" class="btn-primary" style="padding:0.3rem 0.7rem;font-size:0.9rem;">Guardar</button>
-                            </form>
-                        </td>
-                        <td style="padding:0.7rem;min-width:120px;">
-                            {% set objetivo = objetivos[tipo].valor_objetivo if objetivos[tipo] else None %}
-                            {% if objetivo and objetivo|float > 0 %}
-                            {% set progreso = (data.promedio / objetivo * 100) if objetivo|float != 0 else 0 %}
-                            {% set progreso = progreso if progreso >= 0 else 0 %}
-                        <div style="background:#eee;border-radius:8px;overflow:hidden;height:18px;width:100%;">
-                            <div style="background:linear-gradient(90deg,#2ecc71,#27ae60);height:100%;width:'{{ progreso if progreso < 100 else 100 }}%';transition:width 0.5s;"></div>
+        <div style="margin-top:3rem;">
+            <h2 class="chart-title">
+                <i class="fas fa-chart-bar"></i> Estadísticas por Tipo de Métrica
+            </h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:2rem;margin-top:2rem;">
+            {% for tipo, data in stats.items() %}
+                <div style="background:white;border-radius:20px;padding:2rem;box-shadow:0 8px 25px rgba(0,0,0,0.1);border-left:5px solid #3498db;transition:all 0.3s ease;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+                        <h3 style="font-size:1.5rem;font-weight:700;color:#2c3e50;margin:0;">
+                            <i class="fas fa-tag" style="color:#3498db;margin-right:0.5rem;"></i>{{ tipo }}
+                        </h3>
+                        <span style="background:linear-gradient(135deg,#3498db,#2ecc71);color:white;padding:0.4rem 1rem;border-radius:20px;font-size:0.85rem;font-weight:600;">
+                            {{ data.unidad }}
+                        </span>
+                    </div>
+                    
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
+                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(52,152,219,0.1),rgba(46,204,113,0.05));border-radius:12px;border:2px solid rgba(52,152,219,0.2);">
+                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-chart-line"></i> Actual (Promedio)
+                            </div>
+                            <div style="font-size:1.8rem;font-weight:800;color:#2c3e50;">{{ data.promedio|round(1) }}</div>
+                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">{{ data.unidad }}</div>
                         </div>
-                            {% if progreso >= 100 %}
-                        <span style="font-size:0.95em;color:#27ae60;font-weight:bold;">¡Meta alcanzada!</span>
+                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(46,204,113,0.08),rgba(39,174,96,0.05));border-radius:12px;">
+                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-arrow-up"></i> Máximo
+                            </div>
+                            <div style="font-size:1.5rem;font-weight:700;color:#27ae60;">{{ data.maximo|round(1) }}</div>
+                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">Pico más alto</div>
+                        </div>
+                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(243,156,18,0.08),rgba(230,126,34,0.05));border-radius:12px;">
+                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-arrow-down"></i> Mínimo
+                            </div>
+                            <div style="font-size:1.5rem;font-weight:700;color:#e67e22;">{{ data.minimo|round(1) }}</div>
+                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">Punto más bajo</div>
+                        </div>
+                        <div style="text-align:center;padding:1rem;background:linear-gradient(135deg,rgba(155,89,182,0.08),rgba(142,68,173,0.05));border-radius:12px;">
+                            <div style="font-size:0.75rem;color:#7f8c8d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;font-weight:600;">
+                                <i class="fas fa-database"></i> Registros
+                            </div>
+                            <div style="font-size:1.5rem;font-weight:700;color:#8e44ad;">{{ data.valores|length }}</div>
+                            <div style="font-size:0.7rem;color:#95a5a6;margin-top:0.2rem;">Total mediciones</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background:rgba(52,152,219,0.03);padding:1.2rem;border-radius:12px;margin-bottom:1rem;">
+                        <div style="font-size:0.9rem;color:#7f8c8d;margin-bottom:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+                            <i class="fas fa-bullseye"></i> Establecer Objetivo
+                        </div>
+                        <form method="post" style="display:flex;gap:0.6rem;align-items:flex-end;flex-wrap:wrap;">
+                            <input type="hidden" name="objetivo_metrica" value="{{ tipo }}">
+                            
+                            <div style="flex:1;min-width:100px;">
+                                <label style="display:block;font-size:0.8rem;color:#7f8c8d;margin-bottom:0.3rem;font-weight:600;">Valor Inicial</label>
+                                <input type="number" step="any" name="valor_inicial" 
+                                       value="{{ objetivos[tipo].valor_inicial if (objetivos[tipo] and objetivos[tipo].valor_inicial) else data.promedio|round(2) }}" 
+                                       placeholder="Inicio" 
+                                       style="width:100%;padding:0.7rem 1rem;border-radius:10px;border:2px solid #e0e6ed;font-size:0.95rem;font-weight:500;transition:all 0.3s;">
+                            </div>
+                            
+                            <div style="flex:1;min-width:100px;">
+                                <label style="display:block;font-size:0.8rem;color:#7f8c8d;margin-bottom:0.3rem;font-weight:600;">Meta</label>
+                                <input type="number" step="any" name="valor_objetivo" 
+                                       value="{{ objetivos[tipo].valor_objetivo if objetivos[tipo] else '' }}" 
+                                       placeholder="Objetivo" 
+                                       required
+                                       style="width:100%;padding:0.7rem 1rem;border-radius:10px;border:2px solid #e0e6ed;font-size:0.95rem;font-weight:500;transition:all 0.3s;">
+                            </div>
+                            
+                            <div style="width:90px;">
+                                <label style="display:block;font-size:0.8rem;color:#7f8c8d;margin-bottom:0.3rem;font-weight:600;">Unidad</label>
+                                <input type="text" name="unidad_objetivo" 
+                                       value="{{ objetivos[tipo].unidad if objetivos[tipo] else data.unidad }}" 
+                                       placeholder="kg" 
+                                       style="width:100%;padding:0.7rem 1rem;border-radius:10px;border:2px solid #e0e6ed;font-size:0.95rem;font-weight:500;transition:all 0.3s;">
+                            </div>
+                            
+                            <div>
+                                <label style="display:block;font-size:0.8rem;color:#7f8c8d;margin-bottom:0.3rem;font-weight:600;">Dirección</label>
+                                <select name="direccion_objetivo" style="padding:0.7rem 1rem;border-radius:10px;border:2px solid #e0e6ed;font-size:0.95rem;font-weight:500;background:white;cursor:pointer;transition:all 0.3s;">
+                                    <option value="aumentar" {% if objetivos[tipo] and objetivos[tipo].direccion == 'aumentar' %}selected{% endif %}>📈 Aumentar</option>
+                                    <option value="disminuir" {% if objetivos[tipo] and objetivos[tipo].direccion == 'disminuir' %}selected{% endif %}>📉 Disminuir</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary" style="padding:0.7rem 1.5rem;font-size:0.95rem;background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:10px;box-shadow:0 3px 10px rgba(44,62,80,0.2);">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div style="background:linear-gradient(135deg,rgba(46,204,113,0.05),rgba(52,152,219,0.03));padding:1.2rem;border-radius:12px;">
+                        {% set objetivo = objetivos[tipo].valor_objetivo if objetivos[tipo] else None %}
+                        {% set direccion = objetivos[tipo].direccion if (objetivos[tipo] and objetivos[tipo].direccion) else 'aumentar' %}
+                        {% set valor_inicial = objetivos[tipo].valor_inicial if (objetivos[tipo] and objetivos[tipo].valor_inicial) else data.promedio %}
+                        
+                        {% if objetivo and objetivo != 0 %}
+                        {% set obj_float = objetivo|float %}
+                        {% set ini_float = valor_inicial|float %}
+                        
+                        {# Calcular progreso basado en valor inicial definido por usuario #}
+                        {# Usar data.actual (valor más reciente) en lugar de data.promedio #}
+                        {% set valor_actual = data.actual if data.actual else data.promedio %}
+                        {% if direccion == 'disminuir' %}
+                            {# DISMINUIR: Ir de valor_inicial (mayor) a objetivo (menor) #}
+                            {# Ejemplo: 100kg → 80kg #}
+                            {% if valor_actual <= obj_float %}
+                                {% set progreso = 100.0 %}
+                                {% set falta = 0.0 %}
                             {% else %}
-                        <span style="font-size:0.95em;">{{ progreso|round(1) }}% de la meta<br><span style="color:#888;">Faltan {{ (objetivo - data.promedio)|round(2) }} {{ data.unidad }}</span></span>
+                                {% set rango_total = ini_float - obj_float %}
+                                {% if rango_total > 0 %}
+                                    {% set avance = ini_float - valor_actual %}
+                                    {% set progreso = (avance / rango_total * 100.0) %}
+                                {% else %}
+                                    {% set progreso = 100.0 %}
+                                {% endif %}
+                                {% set falta = valor_actual - obj_float %}
                             {% endif %}
+                        {% else %}
+                            {# AUMENTAR: Ir de valor_inicial (menor) a objetivo (mayor) #}
+                            {# Ejemplo: 60kg → 70kg #}
+                            {% if valor_actual >= obj_float %}
+                                {% set progreso = 100.0 %}
+                                {% set falta = 0.0 %}
                             {% else %}
-                        <span style="color:#aaa;font-size:0.95em;">Sin objetivo</span>
+                                {% set rango_total = obj_float - ini_float %}
+                                {% if rango_total > 0 %}
+                                    {% set avance = valor_actual - ini_float %}
+                                    {% set progreso = (avance / rango_total * 100.0) %}
+                                {% else %}
+                                    {% set progreso = 100.0 %}
+                                {% endif %}
+                                {% set falta = obj_float - valor_actual %}
+                            {% endif %}
                         {% endif %}
-                    </td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="7" style="text-align:center;color:#7f8c8d;padding:1.5rem;">No hay datos para mostrar estadísticas.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        
+                        {# Limitar progreso entre 0 y 100 #}
+                        {% set progreso = 0.0 if progreso < 0 else progreso %}
+                        {% set progreso = 100.0 if progreso > 100 else progreso %}
+                        {% set falta = 0.0 if falta < 0 else falta %}
+                        
+                        <div style="margin-bottom:0.8rem;display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:0.9rem;color:#7f8c8d;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+                                <i class="fas fa-tasks"></i> Progreso {% if direccion == 'disminuir' %}📉{% else %}📈{% endif %}
+                            </span>
+                            <span style="font-size:1.2rem;font-weight:700;color:#2c3e50;">{{ progreso|round(1) }}%</span>
+                        </div>
+                        
+                        <div style="font-size:0.75rem;color:#95a5a6;margin-bottom:0.5rem;text-align:center;">
+                            {{ ini_float|round(1) }} {{ data.unidad }} → <strong style="color:#2c3e50;">{{ valor_actual|round(1) }} {{ data.unidad }}</strong> → {{ obj_float|round(1) }} {{ data.unidad }}
+                        </div>
+                        
+                        <div style="background:#ecf0f1;border-radius:15px;overflow:hidden;height:30px;width:100%;margin-bottom:0.8rem;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,0.1);">
+                            {% if progreso >= 100 %}
+                                {% set color_barra = 'linear-gradient(90deg,#2ecc71,#27ae60)' %}
+                            {% elif progreso >= 50 %}
+                                {% set color_barra = 'linear-gradient(90deg,#3498db,#2ecc71)' %}
+                            {% else %}
+                                {% set color_barra = 'linear-gradient(90deg,#f39c12,#e67e22)' %}
+                            {% endif %}
+                            {# Asegurar ancho mínimo visible de 3% incluso cuando progreso es 0 #}
+                            {% set ancho_barra = progreso if progreso > 3 else 3 %}
+                            <div style="background:{{ color_barra }};height:100%;width:{{ ancho_barra|round(1) }}%;transition:width 0.5s ease;border-radius:15px;box-shadow:0 2px 8px rgba(46,204,113,0.3);"></div>
+                        </div>
+                        
+                        {% if progreso >= 100 %}
+                        <div style="text-align:center;padding:0.8rem;background:linear-gradient(135deg,#2ecc71,#27ae60);border-radius:10px;color:white;font-weight:600;">
+                            <i class="fas fa-trophy" style="font-size:1.3rem;margin-right:0.5rem;"></i> ¡Meta alcanzada!
+                        </div>
+                        {% else %}
+                        <div style="text-align:center;color:#7f8c8d;font-size:0.95rem;">
+                            {% if direccion == 'disminuir' %}
+                                <i class="fas fa-arrow-down"></i> Faltan <strong style="color:#e74c3c;">{{ falta|round(2) }} {{ data.unidad }}</strong> por bajar
+                            {% else %}
+                                <i class="fas fa-arrow-up"></i> Faltan <strong style="color:#2ecc71;">{{ falta|round(2) }} {{ data.unidad }}</strong> por subir
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div style="text-align:center;padding:1.5rem;color:#bdc3c7;">
+                            <i class="fas fa-info-circle" style="font-size:2rem;opacity:0.3;display:block;margin-bottom:0.5rem;"></i>
+                            <span style="font-size:0.95rem;">Define un objetivo para ver tu progreso</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div style="background:white;border-radius:20px;padding:3rem;box-shadow:0 8px 25px rgba(0,0,0,0.1);text-align:center;grid-column:1/-1;">
+                    <i class="fas fa-inbox" style="font-size:4rem;color:#bdc3c7;opacity:0.3;margin-bottom:1rem;"></i>
+                    <h3 style="color:#7f8c8d;font-size:1.3rem;margin:0;">No hay datos para mostrar estadísticas</h3>
+                </div>
+            {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -846,69 +1116,46 @@
     });
     </script>
     <script>
-        // Accesibilidad: Alto contraste
-        document.getElementById('toggleContrast').addEventListener('click', function() {
-            document.body.classList.toggle('high-contrast');
-        });
-        // Accesibilidad: Tamaño de fuente
-        let fontSizeState = 0; // 0=normal, 1=large, 2=xlarge, -1=small, -2=xsmall
-        document.getElementById('increaseFont').addEventListener('click', function() {
-            if (fontSizeState < 2) fontSizeState++;
-            updateFontSize();
-        });
-        document.getElementById('decreaseFont').addEventListener('click', function() {
-            if (fontSizeState > -2) fontSizeState--;
-            updateFontSize();
-        });
-        function updateFontSize() {
-            document.documentElement.classList.remove('font-xsmall', 'font-small', 'font-large', 'font-xlarge');
-            if (fontSizeState === 1) document.documentElement.classList.add('font-large');
-            else if (fontSizeState === 2) document.documentElement.classList.add('font-xlarge');
-            else if (fontSizeState === -1) document.documentElement.classList.add('font-small');
-            else if (fontSizeState === -2) document.documentElement.classList.add('font-xsmall');
-        }
-    </script>
-    <script>
-        // Búsqueda mejorada en tiempo real
+        // Búsqueda mejorada en tiempo real para tarjetas
         const searchInput = document.getElementById('searchInput');
-        const table = document.getElementById('metricasTable');
-        const tbody = table.querySelector('tbody');
+        const metricCards = document.querySelectorAll('[data-metric-card]');
         
-        searchInput.addEventListener('input', function() {
-            const filter = this.value.toLowerCase().trim();
-            const rows = tbody.getElementsByTagName('tr');
-            let visibleCount = 0;
-            
-            for (let i = 0; i < rows.length; i++) {
-                const cells = rows[i].getElementsByTagName('td');
-                let showRow = false;
+        if (searchInput && metricCards.length > 0) {
+            searchInput.addEventListener('input', function() {
+                const filter = this.value.toLowerCase().trim();
+                let visibleCount = 0;
                 
-                if (cells.length > 0) {
-                    for (let j = 0; j < cells.length - 1; j++) { // Excluir columna de acciones
-                        if (cells[j].textContent.toLowerCase().includes(filter)) {
-                            showRow = true;
-                            break;
-                        }
-                    }
+                metricCards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    const shouldShow = text.includes(filter);
                     
-                    rows[i].style.display = showRow ? '' : 'none';
-                    if (showRow) visibleCount++;
+                    card.style.display = shouldShow ? '' : 'none';
+                    if (shouldShow) visibleCount++;
+                });
+                
+                // Mostrar mensaje si no hay resultados
+                const gridContainer = metricCards[0]?.parentElement;
+                if (gridContainer) {
+                    let noResultsDiv = document.querySelector('.no-results-message');
+                    
+                    if (visibleCount === 0 && filter) {
+                        if (!noResultsDiv) {
+                            noResultsDiv = document.createElement('div');
+                            noResultsDiv.className = 'no-results-message';
+                            noResultsDiv.style.cssText = 'grid-column:1/-1;background:white;border-radius:20px;padding:3rem;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.08);';
+                            noResultsDiv.innerHTML = `
+                                <i class="fas fa-search" style="font-size:4rem;color:#bdc3c7;opacity:0.3;margin-bottom:1rem;"></i>
+                                <h3 style="color:#7f8c8d;font-size:1.3rem;margin:0;">No se encontraron métricas</h3>
+                                <p style="color:#95a5a6;margin-top:0.5rem;">Intenta con otros términos de búsqueda</p>
+                            `;
+                            gridContainer.appendChild(noResultsDiv);
+                        }
+                    } else if (noResultsDiv) {
+                        noResultsDiv.remove();
+                    }
                 }
-            }
-            
-            // Mostrar mensaje si no hay resultados
-            if (visibleCount === 0 && filter) {
-                if (!document.querySelector('.no-results')) {
-                    const noResultsRow = document.createElement('tr');
-                    noResultsRow.className = 'no-results';
-                    noResultsRow.innerHTML = '<td colspan="7" class="empty-state">🔍 No se encontraron métricas que coincidan con tu búsqueda</td>';
-                    tbody.appendChild(noResultsRow);
-                }
-            } else {
-                const noResultsRow = document.querySelector('.no-results');
-                if (noResultsRow) noResultsRow.remove();
-            }
-        });
+            });
+        }
 
         // Datos para la gráfica mejorada
         const metricasData = JSON.parse(document.getElementById('metricasData').textContent) || [];
@@ -972,23 +1219,40 @@
                             position: 'top',
                             labels: {
                                 usePointStyle: true,
-                                padding: 16,
-                                font: { size: 13, weight: 'bold' },
-                                color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526'
+                                pointStyle: 'circle',
+                                padding: 20,
+                                font: { size: 14, weight: '600', family: 'Inter, sans-serif' },
+                                color: '#2c3e50',
+                                boxWidth: 12,
+                                boxHeight: 12
                             }
                         },
                         title: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(30,44,80,0.95)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
+                            backgroundColor: 'rgba(44,62,80,0.97)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
                             borderColor: '#3498db',
                             borderWidth: 2,
-                            cornerRadius: 10,
+                            cornerRadius: 12,
                             displayColors: true,
-                            padding: 14,
-                            caretSize: 8,
-                            boxPadding: 8
+                            padding: 16,
+                            caretSize: 10,
+                            boxPadding: 10,
+                            titleFont: { size: 15, weight: '700', family: 'Inter, sans-serif' },
+                            bodyFont: { size: 14, weight: '500', family: 'Inter, sans-serif' },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -1001,44 +1265,74 @@
                             },
                             title: { 
                                 display: true, 
-                                text: 'Fecha',
-                                font: { size: 14, weight: 'bold' },
-                                color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526'
+                                text: '📅 Fecha',
+                                font: { size: 15, weight: '700', family: 'Inter, sans-serif' },
+                                color: '#2c3e50',
+                                padding: { top: 10 }
                             },
-                            grid: { color: 'rgba(52,152,219,0.08)' },
-                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526', font: { size: 12 } }
+                            grid: { 
+                                color: 'rgba(52,152,219,0.1)',
+                                lineWidth: 1.5,
+                                drawBorder: true,
+                                borderColor: '#e0e6ed',
+                                borderWidth: 2
+                            },
+                            ticks: { 
+                                color: '#34495e', 
+                                font: { size: 13, weight: '500', family: 'Inter, sans-serif' },
+                                padding: 8
+                            }
                         },
                         y: {
                             title: { 
                                 display: true, 
-                                text: 'Valor',
-                                font: { size: 14, weight: 'bold' },
-                                color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526'
+                                text: '📊 Valor',
+                                font: { size: 15, weight: '700', family: 'Inter, sans-serif' },
+                                color: '#2c3e50',
+                                padding: { bottom: 10 }
                             },
-                            grid: { color: 'rgba(52,152,219,0.08)' },
+                            grid: { 
+                                color: 'rgba(52,152,219,0.1)',
+                                lineWidth: 1.5,
+                                drawBorder: true,
+                                borderColor: '#e0e6ed',
+                                borderWidth: 2
+                            },
                             beginAtZero: false,
-                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-color') || '#232526', font: { size: 12 } }
+                            ticks: { 
+                                color: '#34495e', 
+                                font: { size: 13, weight: '500', family: 'Inter, sans-serif' },
+                                padding: 8,
+                                callback: function(value) {
+                                    return value.toFixed(1);
+                                }
+                            }
                         }
                     },
                     elements: {
                         point: {
-                            hoverBorderWidth: 3
+                            radius: 5,
+                            hoverRadius: 8,
+                            hoverBorderWidth: 3,
+                            borderWidth: 2,
+                            backgroundColor: '#ffffff'
                         },
                         line: {
-                            borderWidth: 3
+                            borderWidth: 3.5,
+                            tension: 0.4
                         }
                     },
                     interaction: {
                         intersect: false,
-                        mode: 'nearest'
+                        mode: 'index'
                     },
                     hover: {
-                        mode: 'nearest',
+                        mode: 'index',
                         intersect: false
                     },
                     animation: {
-                        duration: 1200,
-                        easing: 'easeOutQuart'
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
                     }
                 }
             });
@@ -1079,59 +1373,6 @@
                 }
             });
         });
-    </script>
-    <script>
-    // Modo oscuro y color personalizado
-    const root = document.documentElement;
-    const toggleDark = document.getElementById('toggleDark');
-    const themeColor = document.getElementById('themeColor');
-
-    // Cargar preferencias
-    function applyTheme() {
-        const dark = localStorage.getItem('darkMode') === 'true';
-        const color = localStorage.getItem('themeColor') || '#3498db';
-        themeColor.value = color;
-        if (dark) {
-            document.body.style.background = 'linear-gradient(135deg, #232526 0%, #414345 100%)';
-            root.style.setProperty('--main-bg', '#232526');
-            root.style.setProperty('--main-fg', '#fff');
-            root.style.setProperty('--card-bg', '#2c3e50');
-            root.style.setProperty('--text-color', '#fff');
-            root.style.setProperty('--primary', color);
-            document.querySelectorAll('.dashboard-container, .stat-card, .chart-container, .table-container, .filters-section').forEach(e=>{
-                e.style.background = '#232526';
-                e.style.color = '#fff';
-            });
-            document.querySelectorAll('table').forEach(e=>e.style.background='#232526');
-        } else {
-            document.body.style.background = 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)';
-            root.style.setProperty('--main-bg', '#fff');
-            root.style.setProperty('--main-fg', '#232526');
-            root.style.setProperty('--card-bg', '#fff');
-            root.style.setProperty('--text-color', '#232526');
-            root.style.setProperty('--primary', color);
-            document.querySelectorAll('.dashboard-container, .stat-card, .chart-container, .table-container, .filters-section').forEach(e=>{
-                e.style.background = '';
-                e.style.color = '';
-            });
-            document.querySelectorAll('table').forEach(e=>e.style.background='');
-        }
-        // Cambiar color principal en botones
-        document.querySelectorAll('.btn-primary').forEach(btn=>{
-            btn.style.background = `linear-gradient(135deg, ${color}, #2980b9)`;
-        });
-    }
-    toggleDark.onclick = function() {
-        const dark = localStorage.getItem('darkMode') === 'true';
-        localStorage.setItem('darkMode', !dark);
-        applyTheme();
-    };
-    themeColor.oninput = function() {
-        localStorage.setItem('themeColor', this.value);
-        applyTheme();
-    };
-    // Inicializar
-    applyTheme();
     </script>
     <script>
     // Guía rápida y modal de bienvenida

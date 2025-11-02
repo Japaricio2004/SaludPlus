@@ -10,6 +10,7 @@ from flask import send_file
 main = Blueprint('main', __name__)
 import json
 from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
 
 @main.route('/', methods=['GET', 'POST'])
 @login_required
@@ -18,15 +19,28 @@ def dashboard():
     # Guardar/actualizar objetivos
     if request.method == 'POST' and 'objetivo_metrica' in request.form:
         nombre_metrica = request.form['objetivo_metrica']
+        valor_inicial = request.form.get('valor_inicial', '')
         valor_objetivo = request.form['valor_objetivo']
         unidad = request.form.get('unidad_objetivo', '')
+        direccion = request.form.get('direccion_objetivo', 'aumentar')  # Obtener dirección
+        
         if nombre_metrica and valor_objetivo:
             obj = Objetivo.query.filter_by(usuario_id=current_user.id, nombre_metrica=nombre_metrica).first()
             if obj:
+                if valor_inicial:
+                    obj.valor_inicial = float(valor_inicial)
                 obj.valor_objetivo = valor_objetivo
                 obj.unidad = unidad
+                obj.direccion = direccion  # Actualizar dirección
             else:
-                obj = Objetivo(usuario_id=current_user.id, nombre_metrica=nombre_metrica, valor_objetivo=valor_objetivo, unidad=unidad)
+                obj = Objetivo(
+                    usuario_id=current_user.id, 
+                    nombre_metrica=nombre_metrica,
+                    valor_inicial=float(valor_inicial) if valor_inicial else None,
+                    valor_objetivo=valor_objetivo, 
+                    unidad=unidad, 
+                    direccion=direccion
+                )
                 db.session.add(obj)
             db.session.commit()
             flash(f'Objetivo para "{nombre_metrica}" actualizado.', 'success')
@@ -43,7 +57,7 @@ def dashboard():
         filtros.append(Metrica.fecha >= fecha_inicio)
     if fecha_fin:
         filtros.append(Metrica.fecha <= fecha_fin)
-    metricas = Metrica.query.filter(and_(*filtros)).order_by(Metrica.fecha.asc()).all()
+    metricas = Metrica.query.options(joinedload(Metrica.categoria)).filter(and_(*filtros)).order_by(Metrica.fecha.asc()).all()
     metricas_json = json.dumps([
         {
             'nombre': m.nombre,
@@ -64,9 +78,17 @@ def dashboard():
         stats[m.nombre]['fechas'].append(m.fecha)
     for nombre, data in stats.items():
         valores = data['valores']
+        fechas = data['fechas']
         data['promedio'] = round(sum(valores) / len(valores), 2) if valores else 0
         data['maximo'] = max(valores) if valores else 0
         data['minimo'] = min(valores) if valores else 0
+        # Agregar el valor más reciente (última medición)
+        if valores and fechas:
+            # Ordenar por fecha y obtener el valor más reciente
+            valores_ordenados = [v for _, v in sorted(zip(fechas, valores), key=lambda x: x[0])]
+            data['actual'] = valores_ordenados[-1]  # Último valor (más reciente)
+        else:
+            data['actual'] = 0
 
     # Leer objetivos del usuario
     objetivos = {o.nombre_metrica: o for o in Objetivo.query.filter_by(usuario_id=current_user.id).all()}
@@ -375,3 +397,148 @@ def importar_metricas():
         db.session.rollback()
         flash(f'Error al importar: {e}', 'danger')
     return redirect(url_for('main.dashboard'))
+
+@main.route('/perfil', methods=['GET', 'POST'])
+@login_required
+def perfil():
+    from app.models import PerfilUsuario
+    
+    perfil_usuario = PerfilUsuario.query.filter_by(usuario_id=current_user.id).first()
+    
+    if request.method == 'POST':
+        edad = request.form.get('edad')
+        altura = request.form.get('altura')
+        genero = request.form.get('genero')
+        nivel_actividad = request.form.get('nivel_actividad')
+        notas = request.form.get('notas')
+        
+        if perfil_usuario:
+            # Actualizar perfil existente
+            perfil_usuario.edad = int(edad) if edad else None
+            perfil_usuario.altura = float(altura) if altura else None
+            perfil_usuario.genero = genero
+            perfil_usuario.nivel_actividad = nivel_actividad
+            perfil_usuario.notas = notas
+        else:
+            # Crear nuevo perfil
+            perfil_usuario = PerfilUsuario(
+                usuario_id=current_user.id,
+                edad=int(edad) if edad else None,
+                altura=float(altura) if altura else None,
+                genero=genero,
+                nivel_actividad=nivel_actividad,
+                notas=notas
+            )
+            db.session.add(perfil_usuario)
+        
+        db.session.commit()
+        flash('Perfil actualizado correctamente', 'success')
+        return redirect(url_for('main.perfil'))
+    
+    # Calcular rangos recomendados si hay perfil
+    rangos = None
+    if perfil_usuario and perfil_usuario.altura:
+        rangos = calcular_rangos_saludables(perfil_usuario)
+    
+    return render_template('perfil.html', perfil=perfil_usuario, rangos=rangos)
+
+def calcular_rangos_saludables(perfil):
+    """Calcula rangos saludables basados en el perfil del usuario"""
+    rangos = {}
+    
+    if perfil.altura:
+        altura_m = perfil.altura / 100  # convertir cm a metros
+        
+        # Rango de peso saludable según IMC (18.5 - 24.9)
+        peso_min = 18.5 * (altura_m ** 2)
+        peso_max = 24.9 * (altura_m ** 2)
+        rangos['peso'] = {
+            'min': round(peso_min, 1),
+            'max': round(peso_max, 1),
+            'ideal': round((peso_min + peso_max) / 2, 1),
+            'unidad': 'kg',
+            'descripcion': f'Rango saludable según IMC (18.5-24.9)'
+        }
+    
+    # Rangos de presión arterial
+    rangos['presion_sistolica'] = {
+        'min': 90,
+        'max': 120,
+        'ideal': 110,
+        'unidad': 'mmHg',
+        'descripcion': 'Presión sistólica normal'
+    }
+    
+    rangos['presion_diastolica'] = {
+        'min': 60,
+        'max': 80,
+        'ideal': 70,
+        'unidad': 'mmHg',
+        'descripcion': 'Presión diastólica normal'
+    }
+    
+    # Glucosa en ayunas
+    rangos['glucosa'] = {
+        'min': 70,
+        'max': 100,
+        'ideal': 85,
+        'unidad': 'mg/dL',
+        'descripcion': 'Glucosa en ayunas normal'
+    }
+    
+    # Frecuencia cardíaca en reposo
+    if perfil.edad:
+        if perfil.edad < 30:
+            fc_ideal = 70
+        elif perfil.edad < 50:
+            fc_ideal = 72
+        else:
+            fc_ideal = 75
+        
+        rangos['frecuencia_cardiaca'] = {
+            'min': 60,
+            'max': 100,
+            'ideal': fc_ideal,
+            'unidad': 'bpm',
+            'descripcion': 'Frecuencia cardíaca en reposo'
+        }
+    
+    # Horas de sueño recomendadas según edad
+    if perfil.edad:
+        if perfil.edad < 18:
+            sueño_min, sueño_max = 8, 10
+        elif perfil.edad < 65:
+            sueño_min, sueño_max = 7, 9
+        else:
+            sueño_min, sueño_max = 7, 8
+        
+        rangos['horas_sueño'] = {
+            'min': sueño_min,
+            'max': sueño_max,
+            'ideal': (sueño_min + sueño_max) / 2,
+            'unidad': 'horas',
+            'descripcion': 'Sueño recomendado'
+        }
+    
+    # Pasos diarios según nivel de actividad
+    if perfil.nivel_actividad:
+        if perfil.nivel_actividad == 'sedentario':
+            pasos = 5000
+        elif perfil.nivel_actividad == 'ligero':
+            pasos = 7500
+        elif perfil.nivel_actividad == 'moderado':
+            pasos = 10000
+        elif perfil.nivel_actividad == 'activo':
+            pasos = 12500
+        else:  # muy_activo
+            pasos = 15000
+        
+        rangos['pasos'] = {
+            'min': pasos - 2000,
+            'max': pasos + 2000,
+            'ideal': pasos,
+            'unidad': 'pasos',
+            'descripcion': f'Objetivo de pasos ({perfil.nivel_actividad})'
+        }
+    
+    return rangos

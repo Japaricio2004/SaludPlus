@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .perfil-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+
+    .perfil-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .perfil-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .perfil-header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+    }
+
+    .perfil-form {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.9rem 1.2rem;
+        border: 2px solid #e0e6ed;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 1rem 2.5rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+    }
+
+    .rangos-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .rangos-section h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+
+    .rangos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .rango-card {
+        background: linear-gradient(135deg, rgba(52,152,219,0.05), rgba(46,204,113,0.05));
+        border-left: 4px solid #3498db;
+        padding: 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .rango-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .rango-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.8rem;
+        text-transform: capitalize;
+    }
+
+    .rango-values {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1rem 0;
+    }
+
+    .rango-value {
+        text-align: center;
+    }
+
+    .rango-value-label {
+        font-size: 0.75rem;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+
+    .rango-value-num {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .rango-value-num.ideal {
+        color: #2ecc71;
+        font-size: 1.8rem;
+    }
+
+    .rango-desc {
+        font-size: 0.85rem;
+        color: #95a5a6;
+        font-style: italic;
+        margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .perfil-container {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="perfil-container">
+    <div class="perfil-header">
+        <h1><i class="fas fa-user-circle"></i> Mi Perfil</h1>
+        <p>Completa tu información para obtener recomendaciones personalizadas</p>
+    </div>
+
+    <form method="post" class="perfil-form">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-birthday-cake"></i> Edad (años)
+                </label>
+                <input type="number" name="edad" value="{{ perfil.edad if perfil else '' }}" 
+                       placeholder="Ej: 25" min="1" max="120">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-ruler-vertical"></i> Altura (cm)
+                </label>
+                <input type="number" step="0.1" name="altura" value="{{ perfil.altura if perfil else '' }}" 
+                       placeholder="Ej: 175" min="50" max="250">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-venus-mars"></i> Género
+                </label>
+                <select name="genero">
+                    <option value="">Seleccionar...</option>
+                    <option value="masculino" {% if perfil and perfil.genero == 'masculino' %}selected{% endif %}>Masculino</option>
+                    <option value="femenino" {% if perfil and perfil.genero == 'femenino' %}selected{% endif %}>Femenino</option>
+                    <option value="otro" {% if perfil and perfil.genero == 'otro' %}selected{% endif %}>Otro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-running"></i> Nivel de Actividad
+                </label>
+                <select name="nivel_actividad">
+                    <option value="">Seleccionar...</option>
+                    <option value="sedentario" {% if perfil and perfil.nivel_actividad == 'sedentario' %}selected{% endif %}>Sedentario (poco o nada)</option>
+                    <option value="ligero" {% if perfil and perfil.nivel_actividad == 'ligero' %}selected{% endif %}>Ligero (1-3 días/semana)</option>
+                    <option value="moderado" {% if perfil and perfil.nivel_actividad == 'moderado' %}selected{% endif %}>Moderado (3-5 días/semana)</option>
+                    <option value="activo" {% if perfil and perfil.nivel_actividad == 'activo' %}selected{% endif %}>Activo (6-7 días/semana)</option>
+                    <option value="muy_activo" {% if perfil and perfil.nivel_actividad == 'muy_activo' %}selected{% endif %}>Muy Activo (ejercicio intenso diario)</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label>
+                    <i class="fas fa-notes-medical"></i> Notas Adicionales
+                </label>
+                <textarea name="notas" placeholder="Condiciones médicas, alergias, objetivos específicos...">{{ perfil.notas if perfil else '' }}</textarea>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Guardar Perfil
+            </button>
+        </div>
+    </form>
+
+    {% if rangos %}
+    <div class="rangos-section">
+        <h2><i class="fas fa-heartbeat"></i> Rangos Saludables Recomendados</h2>
+        <p style="color: #7f8c8d; margin-bottom: 2rem;">
+            Basados en tu edad, altura y nivel de actividad. Usa estos valores como guía para establecer objetivos.
+        </p>
+
+        <div class="rangos-grid">
+            {% for nombre, datos in rangos.items() %}
+            <div class="rango-card">
+                <h3>{{ nombre.replace('_', ' ').title() }}</h3>
+                <div class="rango-values">
+                    <div class="rango-value">
+                        <div class="rango-value-label">Mínimo</div>
+                        <div class="rango-value-num">{{ datos.min }}</div>
+                    </div>
+                    <div class="rango-value">
+                        <div class="rango-value-label">Ideal</div>
+                        <div class="rango-value-num ideal">{{ datos.ideal }}</div>
+                    </div>
+                    <div class="rango-value">
+                        <div class="rango-value-label">Máximo</div>
+                        <div class="rango-value-num">{{ datos.max }}</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #95a5a6; font-size: 0.9rem; margin-top: 0.5rem;">
+                    {{ datos.unidad }}
+                </div>
+                <div class="rango-desc">{{ datos.descripcion }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

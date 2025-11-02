@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             display: flex;
@@ -40,8 +40,8 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12, #e74c3c);
+            height: 5px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12);
         }
 
         .form-header {
@@ -198,7 +198,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -216,7 +216,7 @@
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
         }
 
         .btn-submit:hover::before {
@@ -412,6 +412,11 @@
             border-radius: 4px;
             font-size: 0.8rem;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .today-btn:hover {
+            background: #2980b9;
         }
     </style>
 </head>
@@ -514,15 +519,14 @@
 
             <div class="form-group">
                 <label for="categoria_id">
-                    🏷️ Categoría
+                    🏷️ Categoría (opcional)
                 </label>
-                <select id="categoria_id" name="categoria_id" required>
-                    <option value="">Selecciona una categoría</option>
+                <select id="categoria_id" name="categoria_id">
+                    <option value="">Sin categoría</option>
                     {% for categoria in categorias %}
                         <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
                     {% endfor %}
                 </select>
-                <div class="validation-message">Selecciona una categoría</div>
             </div>
 
             <div class="form-group">
